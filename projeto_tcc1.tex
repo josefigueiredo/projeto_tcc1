@@ -1,0 +1,111 @@
+\documentclass[
+12pt,				% tamanho da fonte
+a4paper,			% tamanho do papel. 
+chapter=TITLE,		% títulos de capítulos convertidos em letras maiúsculas
+sumario=abnt-6027-2012,
+english,			% idioma adicional para hifenização
+brazil,				% o último idioma é o principal do documento
+]{abntex2}
+
+\input{pacotesbasicos}	% Incliu pacotes básicos 
+\input{personalizacoes} % Inclui arquivo com reconfigurações.
+
+% -----------------------------------------------------------------
+% Você pode adicionar seus pacotes a partir desta linha;
+% -----------------------------------------------------------------
+
+%\usepackage[showframe,pass]{geometry}
+%\usepackage[11,12]{pagesel}
+
+% -----------------------------------------------------------------
+% Informações de dados para CAPA e FOLHA DE ROSTO
+% -----------------------------------------------------------------
+
+\titulo{Título do Trabalho}%
+
+\autor{Fulano da Silva {}Ciclano}%
+\orientador{Prof. Me. José Antônio Oliveira de {} Figueiredo}%
+\coorientador{Prof. Dr. Juscelino {} Sobrenome}%
+
+% ATENÇÃO: O símbolo {} indica o sobrenome para a ficha catalográfica.
+% Exemplo: Sherlock Holmes {}da Silva para sobrenomes compostos;
+% Exemplo: Arnold Alois {}Schwarzenegger para sobrenome simples.
+
+\instituicao{Instituto Federal Sul-rio-grandense, Curso de Bacharelado em Ciência da Computação}%
+
+
+\tipotrabalho{Projeto de pesquisa}
+
+
+
+\preambulo{Projeto de pesquisa submetido como requisito parcial para a aprovação na disciplina Trabalho de Conclusão I do Curso de Bacharelado em Ciência da Computação, do Instituto Federal Sul-rio-grandense, Câmpus Passo Fundo.}
+
+\local{Passo Fundo}%
+
+\data{\the\year}%
+% ---
+
+% compila o indice
+\makeindex
+
+
+
+% -----------------------------------------------------------------
+% Início do documento
+% -----------------------------------------------------------------
+\begin{document}
+	
+	\selectlanguage{brazil}
+	\frenchspacing  % Retira espaço extra obsoleto entre as frases.
+	
+	% -----------------------------------------------------------------
+	% ELEMENTOS PRÉ-TEXTUAIS
+	% -----------------------------------------------------------------
+	\pretextual
+	
+	% Você pode comentar os elementos que não deseja em seu trabalho;
+	
+	% A capa pode ser escolhida dentro do arquivo Capa.tex (TCC, Master, Doc, ...)
+	\include{PreTextuais/Capa}					% Elemento Obrigatório
+	\include{PreTextuais/FolhadeRosto}			% Elemento Obrigatório
+	% Caso não utilize a Ficha Catalográfica entre na folha de rosto e retire o * de dentro do arquivo FolhadeRosto
+	%\include{PreTextuais/FichaCatalografica}	% Elemento Obrigatório (Verso da Folha)
+	%\include{PreTextuais/Errata}				% Elemento Opcional
+	%\include{PreTextuais/FolhadeAprovacao}		% Elemento Obrigatório
+	%\include{PreTextuais/Dedicatoria}			% Elemento Opcional
+	%\include{PreTextuais/Agradecimentos}		% Elemento Opcional
+	%\include{PreTextuais/Epigrafe}				% Elemento Opcional
+	%\include{PreTextuais/Resumo}				% Elemento Obrigatório
+	%\include{PreTextuais/Abstract}				% Elemento Obrigatório
+	%\include{PreTextuais/Listas}				% Elemento Opcional
+	\include{PreTextuais/Sumario}				% Elemento Obrigatório
+	
+	% -----------------------------------------------------------------
+	% ELEMENTOS TEXTUAIS
+	% -----------------------------------------------------------------
+	\textual
+	
+
+	\include{Textuais/Capitulo01}
+	\include{Textuais/Capitulo02}
+	%\include{Textuais/Capitulo03}
+	
+	% -----------------------------------------------------------------
+	% ELEMENTOS PÓS-TEXTUAIS
+	% -----------------------------------------------------------------
+	
+	% Você pode comentar os elementos que não deseja em seu trabalho;
+	
+	% Referências bibliográficas
+	\bibliography{abntex2-ref_UDESC_2020}	% Elemento Obrigatório
+	\bibliographystyle{ieeetr}
+	\include{PosTextuais/Glossario}				% Elemento Opcional
+	\include{PosTextuais/Apendices}				% Elemento Opcional
+	\include{PosTextuais/Anexos}				% Elemento Opcional
+	%\include{PosTextuais/IndiceRemissivo}		% Elemento Opcional
+	
+\end{document}
+
+% -----------------------------------------------------------------
+% Fim do Documento
+% -----------------------------------------------------------------	
