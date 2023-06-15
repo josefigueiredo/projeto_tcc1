@@ -20,41 +20,45 @@ Detecção de colisão entre objetos em simulações computacionais
 
 \subsection{Objetivos Específicos}
 \begin{enumerate}
-\item Conhecer as principais etapas de uma simulação física computacional;
-\item Avaliar o funcionamento dos algoritmos sort and sweep e octree na fase de detecção de possíveis colisões em uma etapa de simulação;
+\item Conhecer as principais etapas de uma simulação física computacional.
+\item Avaliar o funcionamento dos algoritmos sort and sweep e octree na fase de detecção de possíveis colisões em uma etapa de simulação.
 \item Avaliar o funcionamento de algoritmos para detecção de colisão entre objetos de geometrias específicas.
-\item Avaliar o método Impulse para a resolução de colisão entre dois objetos em uma etapa de simulação
+\item Avaliar o método Impulse para a resolução de colisão entre dois objetos em uma etapa de simulação.
 \end{enumerate}
 
 \section{Justificativa}
 
-Segundo Bourg e Bywalec (2013, p. 103, tradução nossa), “a detecção de colisão é um problema de geometria computacional que determina se ocorreu, e onde ocorreu, uma ou mais colisões entre objetos” da simulação. Com base nisto, podemos afirmar que existem diversos algoritmos para detecção de colisão entre objetos de geometrias específicas, e também diferentes técnicas para otimizar esta detecção tornando-a mais eficiente, rápida e robusta.
-Ericson (2004, tradução nossa) afirma que apesar de hoje em dia os computadores serem extremamente rápidos, a detecção de colisão continua sendo um problema fundamental. Isso ocorre porque jogos e outras simulações são frequentemente construídos em um ambiente 3D, com centenas de milhares de polígonos, exigindo assim, algoritmos e estruturas de dados mais sofisticados para operar, em tempo real, com conjuntos de dados dessa magnitude.
+Segundo \citeonline{bourg2013physics}, “a detecção de colisão é um problema de geometria computacional que determina se ocorreu, e onde ocorreu, uma ou mais colisões entre objetos” da simulação. Com base nisto, podemos afirmar que existem diversos algoritmos para detecção de colisão entre objetos de geometrias específicas, e também diferentes técnicas para otimizar esta detecção tornando-a mais eficiente, rápida e robusta.
+
+\citeonline{ericson2004real} afirma que apesar de hoje em dia os computadores serem extremamente rápidos, a detecção de colisão continua sendo um problema fundamental. Isso ocorre porque jogos e outras simulações são frequentemente construídos em um ambiente 3D, com centenas de milhares de polígonos, exigindo assim, algoritmos e estruturas de dados mais sofisticados para operar, em tempo real, com conjuntos de dados dessa magnitude.
+
 Por ser uma área ainda em expansão, pouco explorada e conhecida, este estudo se justifica pois novos métodos poderão surgir, havendo possibilidades para vários trabalhos de pesquisa e desenvolvimento.
 
 \section{Referencial Teórico}
 
 
-1… Simulação computacional
+\subsection{Simulação Computacional}
 
-Segundo Durán (2016, Tradução nossa)  A simulação computacional é uma técnica amplamente utilizada para o estudo de
+Segundo \citeonline{duran2018computer} A simulação computacional é uma técnica amplamente utilizada para o estudo de
 sistemas complexos que por diversos fatores não podem ser facilmente
 reproduzidos devido a custos elevados , ou pelo tempo necessário para que se
-realize os experimentos para a obtenção de resultados precisos. A simulação,
-permite que um pesquisador avalie diversos cenários diferentes para sua
+realize os experimentos para a obtenção de resultados precisos.
+
+A simulação,permite que um pesquisador avalie diversos cenários diferentes para sua
 pesquisa apenas alterando suas variáveis de controle reduzindo a sim os custos
 e os riscos de um experimento físico. Essa técnica pode ser aplicada em
-diversas áreas como biologia, engenharia, física, química entre outras. Para
-construir uma simulação, torna-se necessária a representação matemática ou
+diversas áreas como biologia, engenharia, física, química entre outras.
+
+Para construir uma simulação, torna-se necessária a representação matemática ou
 computacional do comportamento do sistema a ser simulado. Isso inclue mas não
 se limita a variáveis de controle que podem alterar o ambiente simulado, e os
 objetos que serão simulados durante algumas etapas, ou por um período de tempo.
+
 A simulação é uma poderosa ferramenta que contribue na descoberta de novas
 tecnologias, ou no aprimoramento das existentes.
 
-1.1 Representando Formas Geométricas Computacionalmente
-/* explicar Caixas, Esferas, Poliedros */
 
+\subsubsection{Representando Formas Geométricas Computacionalmente}
 Na computação, não existe maneira correta ou incorreta de representar a
 geometria. A forma usada dependerá  do nível de detalhamento desejado. É possível fazer esta representação de diversas maneiras, por exemplo: forma vetorial, paramétrica ou de forma poligonal.
 
@@ -62,7 +66,8 @@ Neste estudo será adotada a representação vetorial, devido a sua simplicidade
 
 Para representação dessas formas geométricas, são utilizados pontos de coordenadas cartesianas, definidos em uma estrutura de vetor tridimensional. O código a seguir demonstra essa estrutura.
 
-\begin{lstlisting}[caption={Exemplo de vetor},label={lst:vec1}]
+#\begin{lstlisting}[basicstyle=\ttfamily,frame=single,language=C,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class vector3d{
 float x;
 float y;
@@ -74,16 +79,18 @@ this->y=y;
 this->z=z;
 }
 };
-\end{lstlisting}
+\end{lstlisting}}
 
 Onde x representa o eixo que vai da esquerda para a direita;
 y representa o eixo  perpendicular ao eixo x;
 E z é o eixo que indica a profundidade apontando para cima.
+
+
 Lembrando também que os vetores tem diversas operações relacionadas como soma,
 subtração, multiplicação, divisão, Comprimento ou módulo, produto escalar,
 produto cruzado e produto triplo escalar que são relevantes para este estudo.
 
-Esferas:
+\subsubsection{Esferas}
 
 As esferas são simples de representar computacionalmente, e também
 incrivelmente fáceis de se computar. Para representarmos uma esfera, tudo o que
@@ -109,7 +116,7 @@ A sim temos uma esfera cujo o centro está posicionado exatamente na origem de
 nosso sistema cartesiano, e que se estende por um raio de 5 em todas as
 direções.
 
-Caixas: 
+\subsubsection{Caixas}
 
 As caixas são trivialmente representáveis de diversas formas. Com elas podemos
 representar formas cuboides facilmente. Ela normalmente é representada por dois
@@ -173,7 +180,7 @@ box3d_3 b3({10,10,10}, {10,10,10});
 Todas as 3 representações terão seus limites entre 10 e 20.
 
 
-Poliedros:
+\subsubsection{Poliedros}
 
 Os poliedros nada mais são que uma nuvem de pontos que representam uma
 geometria específica. Os poliedros certamente são a maneira mais precisa de
@@ -181,7 +188,7 @@ representar geometria, porém eles são uma faca de dois gumes. Quanto mais
 detalhado o poliedro, mais caro será para computar colisões, rotações e
 translações. Existem dois tipos de poliedros. Poliedros convexos e poliedros
 côncavos. Poliedros convexos são poliedros que são coplanares ou que possuem
-suas fases voltada para fora. Por outro lado, poliedros côncavos possuem
+suas faces voltadas para fora. Por outro lado, poliedros côncavos possuem
 pelo menos uma de suas faces voltada para o interior.
 Neste trabalho não usaremos poliedros pois eles utilizam algoritmos mais
 sofisticados para operarem sobre nuvens de pontos para detectar colisões.
@@ -189,37 +196,42 @@ Alguns dos algoritmos mais famosos para isto incluem o
 GJK(GilbertJohnsonKeerthi), ou o Teorema dos eixos separadores, na sigla em
 inglês (SAT).
 
-1.2 Estruturas para delimitação de volumes
+\subsection{ Estruturas para delimitação de volumes}
 explicar AABBS e OBBS, e aplicação disso
 
 Em uma simulação,temos os mais variados objetos interagindo uns com os outros.
 Como por exemplo, uma esfera colidindo contra um triângulo representado de
 forma poligonal. Na simulação, teremos diversos objetos e precisamos testar a
 colisão entre um dos objetos contra todos os outros com seus algoritmos e
-métodos específicos, o que pode ser computacionalmente caro e custoso. É para
-resolver esse problema de executar algoritmos caros a todo instante que
+métodos específicos, o que pode ser computacionalmente caro e custoso.
+
+É para resolver esse problema de executar algoritmos caros a todo instante que
 surgiram os volumes delimitadores. É escolhida uma forma arbitrária para
 representar um volume delimitador para encapsular a geometria específica.
+
 Existem vários tipos de volume delimitadores como esferas, retângulos, e cascas
 convexas. Todas elas tem suas desvantagens e vantagens como por exemplo, um
 volume delimitador como uma esfera é extremamente simples e rápido de se
 calcular, porém, ela é autamente imprecisa para detectar colisões gerando
 diversos falsos positivos.
+
 A forma mais precisa é uma casca convexa, porém, ela é cara de se computar.
 Então um retângulo fornece um bom equilíbrio entre precisão e velocidade sendo
 a sim, a forma preferida de volume delimitador.
+
 Depois de escolhida a forma do volume delimitador que aqui foi escolhida o
 retângulo, surge outro problema. Que tipo de volume delimitador queremos? Um
 AABB, ou um OBB? Novamente, ambos tem suas vantagens e desvantagens que são
 explicadas a seguir:
 
-AABB:
+\subsubsection{AABB}
 Aligned Axis Bounding Box é uma caixa retangular alinhada aos três eixos do
 sistema de coordenadas, por tanto, ela não pode sofrer rotações. Então, caso a
 geometria contida por este volume delimitador sofra uma rotação, o volume
 delimitador deve ser reconstruído para acomodar a geometria rotacionada. Isso
 pode ser especialmente custoso de se computar em poliedros com muitos vértices.
-Porém, a vantagem é que o teste de colisão é eficiente e relativamente
+
+No entanto, a vantagem é que o teste de colisão é eficiente e relativamente
 simples de se computar.
 
 class AABB
@@ -238,7 +250,7 @@ min={0,0,0}
 max={10,10,10}
 
 
-OBB:
+\subsubsection{OBB}
 
 Um Oriented Bounding box tem a mesma função de um AABB, porém, ele não está
 preso a nenhum eixo e é invariável a rotação dos objetos pois ele também é
@@ -249,6 +261,7 @@ obb. É possível representar a matriz de rotação como ângulos de Euler para
 economizar memória, porém, mais tarde ao atualizar a rotação, terá que
 converter os ângulos em uma matriz. Como Christer Ericson comenta em seu livro,
 Obbs e conversões de ângulos é surpreendentemente caro e complicado.
+
 Como tudo na computação tem seus prós e contras, obbs são geralmente mais
 precisos que AABBS, porém, são mais caros de se computar, e também mais
 difíceis de se implementar.
@@ -278,21 +291,23 @@ dois objetos, eles não estão colidindo.
 
 
 
-2. Corpo Rígido (ainda dentro de simulação computacional)
-2.1 O que é um corpo rígido?
+\subsubsection{ Corpo Rígido}
+\subsubsection{ O que é um corpo rígido?}
 
 Segundo Bourg e Bywalec (2013, tradução nossa) Um corpo rígido é um conjunto de partículas  que permanecem a distâncias fixas umas das outras  sem nenhum tipo de translação ou rotação entre elas. Em outras palavras,  um corpo rígido não mudará de forma enquanto se move, ou sua deformação é tão insignificante que pode ser desprezada.
+
 Um corpo rígido é  frequentemente representado como tendo uma posição, uma orientação  e  dimensões para representar seu volume. Estes são requisitos mínimos para a  sua definição, porém, dependendo do nível de precisão desejada, pode-se adicionar mais atributos como tensores de inércia, velocidades lineares e angulares, coeficiente de restituição, e o que mais for necessário para que se atinja os objetivos desejados.
 
-
-2.3 Diferença entre corpo dinâmico e corpo estático
+\subsubsection{ Diferença entre corpo dinâmico e corpo estático}
 
 Existem 3 classes principais de corpos que podem ser representadas em uma simulação:
 Corpos rígidos, que não se deformam  enquanto se movem, ou caso se deformem, são capazes de voltar a sua forma original;
+
+
 Corpos macios, que podem deformar enquanto se movem ou por ação de forças ou eventos externos;
+
 Ou corpos estáticos, que nada mais é que uma sub-classificação de um corpo rígido ou um corpo macio,  mas com a ausência de massa, ficando a sim, estacionário na posição em que se
 encontra...
-
 
 
 \section{Metodologia}
