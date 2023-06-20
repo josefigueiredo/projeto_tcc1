@@ -96,7 +96,7 @@ incrivelmente fáceis de se computar. Para representarmos uma esfera, tudo o que
 precisamos é de um ponto que representará o centro da esfera, e um raio, que
 indica o quanto a esfera se estende em todas as direções a partir do centro.
 
-\begin{lstlisting}[caption={Exemplo de esfera},label={lst:sphere1}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class sphere3d {
 public:
 vector3d center;
@@ -131,7 +131,7 @@ desvantagens dependendo do contexto em que forem utilizadas.
 
 Caixa representada pelo ponto mínimo e máximo:
 
-\begin{lstlisting}[caption={Exemplo de caixa1},label={lst:box1}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class box3d_1{
 vector3d min;
 vector3d max;
@@ -140,7 +140,7 @@ vector3d max;
 
 Caixa com meia larguras
 
-\begin{lstlisting}[caption={Exemplo de caixa2},label={lst:box2}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class box3d_2
 {
 vector3d center;
@@ -150,7 +150,7 @@ vector3d radius;
 
 Caixa com ponto mínimo e medidas completas:
 
-\begin{lstlisting}[caption={Exemplo de caixa3},label={lst:box3}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class box3d_3 {
 vector3d min;
 vector3d measures;
@@ -158,7 +158,7 @@ vector3d measures;
 \end{lstlisting}
 
 Todas elas servem para representar a mesma coisa, mas podem ser utilizadas em
-contextos diferente dependendo o requisito. A box3d_1 é excelente para aabbs
+contextos diferentes dependendo o requisito. A box3d_1 é excelente para aabbs
 porque já tem seus limites bem definidos e pode ser usado mais facilmente para
 sucessivos testes. Porém tem a desvantagem de precisar fazer uma atualização
 extra quando precisar ser movimentada.
@@ -172,9 +172,11 @@ ponto mínimo, e o comprimento de suas arestas até o ponto máximo.
 
 Os 3 exemplos abaixo criam 3 caixas exatamente com os mesmos pontos finais.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 box3d_1 b1({10,10,10}, {20,20,20});
 box3d_2 b2({15,15,15}, {5,5,5});
 box3d_3 b3({10,10,10}, {10,10,10});
+\end{lstlisting}
 
 Todas as 3 representações terão seus limites entre 10 e 20.
 
@@ -196,8 +198,6 @@ GJK(GilbertJohnsonKeerthi), ou o Teorema dos eixos separadores, na sigla em
 inglês (SAT).
 
 \subsection{ Estruturas para delimitação de volumes}
-explicar AABBS e OBBS, e aplicação disso
-
 Em uma simulação,temos os mais variados objetos interagindo uns com os outros.
 Como por exemplo, uma esfera colidindo contra um triângulo representado de
 forma poligonal. Na simulação, teremos diversos objetos e precisamos testar a
@@ -233,6 +233,7 @@ pode ser especialmente custoso de se computar em poliedros com muitos vértices.
 No entanto, a vantagem é que o teste de colisão é eficiente e relativamente
 simples de se computar.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class AABB
 {
 public:
@@ -243,6 +244,8 @@ GeometricShape* shape;
 
 sphere3d* s=new sphere3d({5, 5, 5}, 5);
 AABB* aabb=new AABB(s);
+\end{lstlisting}
+
 A bounding box desta esfera será 2 vetores que envolverão completamente em um cubo.
 Seus vetores respectivamente serão:
 min={0,0,0}
@@ -268,6 +271,7 @@ difíceis de se implementar.
 
 Algumas representações típicas de obbs se seguem:
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class obb_1
 {
 public:
@@ -275,7 +279,9 @@ vector3d center;
 vector3d measures;
 matrix3x3 orientation;
 };
+\end{lstlisting}
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class obb_2
 {
 public:
@@ -283,6 +289,7 @@ vector3d center;
 vector3d measures;
 vector3d angles;
 };
+\end{lstlisting}
 
 Para realizar um teste de sobreposição obb obb é necessário utilizar o teorema
 dos eixos separadores que diz que se existir ao menos um plano que divida os
@@ -307,6 +314,102 @@ Corpos macios, que podem deformar enquanto se movem ou por ação de forças ou 
 
 Ou corpos estáticos, que nada mais é que uma sub-classificação de um corpo rígido ou um corpo macio,  mas com a ausência de massa, ficando a sim, estacionário na posição em que se
 encontra...
+
+
+\subsection{Detecção de Colisão}
+Segundo \citeonline{bourg2013physics}, a detecção de colisão é um problema de geometria computacional que
+determina se e onde, dois ou mais objetos colidiram.
+
+Uma colisão pode ser detectada de diversas maneiras dependendo da natureza dos
+objetos envolvidos como esferas e caixas.
+
+Para algumas situações, uma colisão
+pode ser detectada se a distância entre os dois objetos está a baixo de uma
+determinada tolerância. Em outros casos, os objetos podem estar se sobrepondo
+em um ou mais pontos.
+
+Após uma colisão ser detectada, informações devem ser coletadas para a
+resolução da colisão posteriormente.
+
+Quais informações coletar depende muito da natureza do simulador. Um simulador
+de física por exemplo pode precisar do ponto, ou pontos de contato que fizeram
+os objetos colidirem, além de sua velocidade relativa no instante da colisão.
+
+
+Outras informações importantes para se coletar durante a detecção de colisão
+inclue o vetor normal, que é um vetor unitário que apontará na direção em que a
+colisão aconteceu.
+
+
+E por último, a profundidade de sobreposição, ou de penetração dos objetos.
+Esta informação é necessária para separar os objetos para que eles apenas se
+toquem, e não se sobreponham.
+
+
+\subsection{Fases da Detecção de Colisão}
+
+A detecção de colisão é dividida em duas áreas principais que são:
+
+\subsubsection{Fase Ampla}
+A fase ampla é responsável por determinar rapidamente pares de objetos que
+possivelmente estejam colidindo, e descartar aqueles objetos que não estão.
+
+Nesta fase, os AABBS das formas geométricas são testados pois possuem
+algoritmos simplificados e eficientes para esta tarefa.
+
+Quando uma colisão entre dois AABBS é detectada, a sua geometria contida pode
+não estar colidindo com a geometria do segundo AABB. Então estes dois objetos
+são agrupados para uma análise mais detalhada em uma fase posterior.
+
+\subsubsection{Fase Estreita}
+A fase estreita é responsável pelo trabalho mais detalhado e preciso da
+detecção de colisão.
+
+É nesta fase onde os algoritmos e técnicas específicas são
+aplicadas para determinar se de fato, os pares de objetos suspeitos de colisão
+estão colidindo.
+
+Caso estejam, informações como normal, ponto de contato e profundidade de
+penetração devem ser calculados para uso posterior.
+
+\subsection{Algoritmos para Fase Ampla}
+Um problema da detecção de colisão é que em uma simulação podem existir muitos
+objetos. Alguns distantes, e outros próximos.
+
+Quando pegamos um objeto de forma aleatória deste conjunto de objetos queremos saber com quais outros objetos
+existe a chance de colisão.
+Em uma situação desta natureza,a complexidade dos testes normalmente é de N^2, o que
+computacionalmente é muito dispendioso, porque os objetos mais distantes
+espacialmente não precisariam ser testados.
+
+Para acelerar este processo, existem diversas estruturas de dados e técnicas de compartimentação espacial.
+A lógica destas técnicas é agrupar os objetos que estão próximos uns dos outros
+e interromper a busca quando o restante dos objetos estão fora de alcance.
+
+Algumas das estruturas mais populares atualmente são as árvores octrees, grades
+uniformes e a divisão espacial por hash.
+
+\subsubsection{Octrees}
+
+Uma octree é uma estrutura de dados hierárquica que organiza um espaço
+tridimensional em células menores recursivamente.
+Dado um nó raiz, este nó é dividido em 8  filhos, que também podem ser
+subdivididos em mais 8 filhos até que um critério de parada seja satisfeito.
+Este critério pode ser uma profundidade máxima para a árvore, ou o tamanho do
+nó que será dividido atingiu um limite mínimo.
+
+Os objetos adicionados nesta estrutura tentarão ser adicionados no menor nó que
+seja capaz de conter todo o volume do objeto. Com esta compartimentação
+espacial, os objetos só precisam verificar a possibilidade de colisão com seus
+irmãos, e com os nós mais profundos acelerando assim o processo.
+
+
+\subsubsection{Ordenar e Varrer}
+
+
+\subsection{Resolução de Colisão}
+
+
 
 
 \section{Metodologia}
@@ -340,6 +443,7 @@ Modelagem preliminar do simulador:
 
 Nesta cessão, a modelagem preliminar da engine de simulação será discutida apresentando seus principais componentes.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe vetor3d
 {
 eixo_x
@@ -352,6 +456,7 @@ produto_escalar()
 produto_vetorial()
 produto_triplo_escalar()
 };
+\end{lstlisting}
 
 A classe vetor3d representará as coordenadas cartesianas tridimensionais no
 espaço. Existem 3 componentes fundamentais:
@@ -363,6 +468,7 @@ O vetor também tem diversas operações associadas como soma, subtração,
 multiplicação e divisão. Também possui métodos específicos como normalização,
 magnitude, inverso e seus produtos como produto vetorial e escalar.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe FormaGeometrica
 {
 tipo
@@ -373,33 +479,40 @@ escalar(s)
 rotacionar(orientação)
 converter_string()
 };
+\end{lstlisting}
 
 A classe de forma geométrica é uma base para as próximas implementações de
 esferas e caixas.
 Ela declara padrões que devem ser seguidos pelas classes filhas.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe esfera estende FormaGeometrica
 {
 ponto_central
 raio
 };
+\end{lstlisting}
+
 
 A classe esfera tem 2 atributos principais que são:
 Ponto_central: É um vetor que representa as coordenadas centrais da esfera.
 Raio: Representa o quanto a esfera se estende em todas as direções a partir do
 centro.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe caixa  estende FormaGeometrica
 {
 mínimo
 arestas
 };
+\end{lstlisting}
 
 A classe caixa tem duas propriedades que também são importantes:
 Mínimo: É um vetor que representa o canto inferior esquerdo da caixa.
 Arestas: É o quanto as arestas se estendem nos 3 eixos a partir do canto
 inferior esquerdo...
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe AABB
 {
 min
@@ -410,6 +523,7 @@ escala(s)
 escala(vetor v)
 computar_volume_delimitador()
 };
+\end{lstlisting}
 
 Esta classe representa uma caixa alinhada ao eixo (AABB) Ela é utilizada para
 envolver completamente uma forma geométrica, seja ela esfera, caixa ou
@@ -420,6 +534,7 @@ Max: É um vetor representando o canto superior direito do aabb...
 FormaGeometrica: É a forma geométrica que o aabb está contendo...
 Também possui métodos para redimensionar e transladar o AABB.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe colisao_info
 {
 ponto_de_colisao
@@ -428,11 +543,13 @@ profundidade
 objeto_1
 objeto_2
 };
+\end{lstlisting}
 
 A classe CollisionInfo é responsável por conter informações sobre a colisão que
 foi detectada como ponto de colisão, normal, profundidade, e os objetos
 envolvidos na colisão.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe colisao
 {
 esfera_esfera(s1, s2, info)
@@ -442,11 +559,13 @@ esfera_poliedro(s, p, info)
 caixa_poliedro(c, p, info)
 poliedro_poliedro(p1, p2, info)
 };
+\end{lstlisting}
 
 A classe de colisão irá conter os métodos específicos de colisão entre as
 formas geométricas específicas como esferas x esferas, caixas x caixas e
 poliedros x poliedros.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe corpo_rigido_interface
     {
 massa
@@ -455,16 +574,19 @@ nome
 aabb
 posição
     };
+\end{lstlisting}
 
 Esta interface define alguns atributos básicos que será necessário ao modelar o
 objeto. Se precisarmos de atributos mais específicos, ou se quisermos expandir
 nossa simulação futuramente, basta sub-classificarmos esta interface e realizar
 as mudanças necessárias.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe fase_ampla
 {
 escanear(lista_de_objetos, lista_de_possiveis_colisões)
 };
+\end{lstlisting}
 
 Esta interface representa o nosso algoritmo de broadphase. Como existem
 diversos algoritmos, optou-se de criar uma interface e realizar a implementação
@@ -472,33 +594,40 @@ separadamente.
 O método scan recebe um vetor de corpos rígidos para verificar, e também uma
 lista onde será armazenado informações sobre uma possível colisão...
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe fase_estreita
     {
 detectar_colisões(lista_de_possiveis_colisões, lista_de_colisões)
     };
+\end{lstlisting}
 
 Esta classe implementa o algoritmo de fase estreita da mesma forma que a interface
 de fase ampla. Este algoritmo recebe uma lista de possíveis colisões e sua
 tarefa é aplicar os testes de detecção de colisão entre geometrias específicas
 e avaliar se de fato, o par testado está colidindo.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe solucionador_de_colisão
     {
 resolver(lista_de_colisões)
 resolver_par(objeto_1, objeto_2, info)
     };
+\end{lstlisting}
 
 Esta classe irá resolver as colisões detectadas. Ela age separando os corpos se
 existir sobreposição, e aplicando impulso...
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe integrador_numérico
 {
 mover(lista_de_objetos, tempo)
 mover_objeto(objeto, tempo)
 };
+\end{lstlisting}
 
  Esta classe implementa o algoritmo que fará os objetos se movimentarem na simulação. Para isso serão utilizadas equações das leis de Newton.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 classe octree
 {
 raiz
@@ -514,6 +643,7 @@ A classe tem 2 métodos de fase ampla. O primeiro, recebe uma lista de todos obj
 que queremos que sejam testados, e a saída é uma lista com todas as colisões
 detectadas. O segundo método, recebe um objeto e uma lista de saída de colisões detectadas.
 
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
 class ambiente_de_simulação estende AABB
 {
 tempo_atual
@@ -528,6 +658,7 @@ adicionar_objeto(objeto)
 remover_objeto(objeto)
 passo_de_simulação(tempo)
 };
+\end{lstlisting}
 
 Esta classe é responsável pela simulação do ambiente. Para isso recebe e manipula todos os objetos instanciados pelas classes anteriormente descritas. A classe permite adicionar e remover objetos, e também definir os algoritmos utilizados
 para realizar as tarefas.
