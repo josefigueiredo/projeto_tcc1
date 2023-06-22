@@ -163,16 +163,16 @@ vector3d measures;
 \end{lstlisting}
 
 Todas elas servem para representar a mesma coisa, mas podem ser utilizadas em
-contextos diferentes dependendo o requisito. A ~\ref{code:box3d_1} é excelente para aabbs
+contextos diferentes dependendo o requisito. O Código~\ref{code:box3d_1} é excelente para aabbs
 porque já tem seus limites bem definidos e pode ser usada mais facilmente para
 sucessivos testes. Porém tem a desvantagem de precisar fazer uma atualização
 extra quando precisar ser movimentada.
-No entanto, a ~\ref{code:box3d_2} tem a vantagem de precisar atualizar apenas o ponto
+No entanto, o Código~\ref{code:box3d_2} tem a vantagem de precisar atualizar apenas o ponto
 central, porém, quando necessário, terá as operações para computar seus pontos
 mínimos e máximos. Este tipo de estrutura também é conhecida como esfera de 3
 raios. Em octrees ela é a representação preferida para a representação de nós
 pois é fácil de representar e de se computar.
-A ~\ref{code:box3d_3} Lembra muito a criação de uma janela na computação gráfica. Ela tem seu
+O Código~\ref{code:box3d_3} Lembra muito a criação de uma janela na computação gráfica. Ela tem seu
 ponto mínimo, e o comprimento de suas arestas até o ponto máximo.
 
 Os 3 exemplos abaixo criam 3 caixas exatamente com os mesmos pontos finais.
@@ -206,7 +206,7 @@ Em uma simulação computacional existem diversos objetos e o ambiente precisa t
 
 Existem vários tipos de estruturas delimitadoras de volumes, como esferas, retângulos, e cascas convexas. Devido a simplicidade de implementação, neste trabalho optou-se pela estrutura retangular. As estruturas delimitadoras de volume poderão ser implementadas de duas formas básicas, que são: Aligned Axis Bounding Box (AABB) e Oriented Bounding Box (OBB).
 
-A estrutura AABB, que pode ser implementada como apresentado no código ~\ref{code:aabb_1}, é uma caixa retangular alinhada aos três eixos do sistema de coordenadas e não pode sofrer rotações. Caso uma rotação aconteça, o delimitador precisa ser reconstruído, implicando em maior custo computacional. No entanto, segundo \citeonline{ericson2004real}, a verificação de colisão é relativamente mais simples de computar.
+A estrutura AABB, que pode ser implementada como apresentado no Código~\ref{code:aabb_1}, é uma caixa retangular alinhada aos três eixos do sistema de coordenadas e não pode sofrer rotações. Caso uma rotação aconteça, o delimitador precisa ser reconstruído, implicando em maior custo computacional. No entanto, segundo \citeonline{ericson2004real}, a verificação de colisão é relativamente mais simples de computar.
 
 \begin{lstlisting}[frame=single,caption=Exemplo de AABB\label{code:aabb_1}]
 class AABB
@@ -224,9 +224,9 @@ AABB* aabb=new AABB(s);
 \end{lstlisting}
 
 
-No código apresentado em \ref{code:aabbSphere}, a bounding box desta esfera será 2 vetores encapsulando completamente em um cubo. Seus vetores respectivamente serão: min=0,0,0 max=10,10,10
+No código apresentado no Código~\ref{code:aabbSphere}, a bounding box desta esfera será 2 vetores encapsulando completamente em um cubo. Seus vetores respectivamente serão: min=0,0,0 max=10,10,10
 
-Já a estrutura OBB não está presa a nenhum eixo, facilitando a rotação dos objetos contidos nela. A estrutura OBB, apresentada no código ~\ref{code:obb_1},  é representada por um ponto central, com meias medidas para os eixos e uma matriz de rotação. Segundo Ericson a estrutura OBBS é computacionalmente custosa e de difícil implementação.
+Já a estrutura OBB não está presa a nenhum eixo, facilitando a rotação dos objetos contidos nela. A estrutura OBB, apresentada no Código~\ref{code:obb_1},  é representada por um ponto central, com meias medidas para os eixos e uma matriz de rotação. Segundo Ericson a estrutura OBBS é computacionalmente custosa e de difícil implementação.
 
 \begin{lstlisting}[frame=single,caption=Código de exemplo de OBB\label{code:obb_1}]
 class obb
@@ -385,7 +385,7 @@ detalhadamente em \citeonline{ericson2004real} será utilizado para o desenvolvi
 
 O algoritmo começa ordenando o vetor de entrada por um dos eixos X, Y ou Z., em
 seguida, o vetor é percorrido, e em cada iteração os objetos são testados
-quanto a colisão. Caso o o limite inferior do ~\ref{code:aabb} seja maior do
+quanto a colisão. Caso o limite inferior do Código~\ref{code:aabb} seja maior do
 que o limite superior do AABB testado, o laço interno pode parar com segurança
 pois não existe mais risco de colisão com os próximos objetos. Em seguida, a
 variância dos eixos são calculados, e o eixo com a maior variância é
@@ -439,7 +439,7 @@ de contato e profundidade de penetração para resolver a colisão mais tarde.
 
 Para que duas esferas estejam em colisão, a soma de seus raios deve ser menor
 ou igual a distância de seus centros segundo \citeonline{ericson2004real}.
-A representação da esfera descrita em ~\ref{code:sphere3d} será utilizada.
+A representação da esfera descrita no Código~\ref{code:sphere3d} será utilizada.
 
 \begin{lstlisting}[frame=single,caption=Colisão entre esferas\label{code:collisionSphereSphere}]
 bool sphereSphere(sphere3d* s1, sphere3d* s2)
@@ -469,7 +469,7 @@ lento para ser realizada como descrito em \citeonline{ericson2004real} e \citeon
 
 Para que duas caixas estejam em colisão, precisa existir sobreposição nos três
 eixos testados.
-Neste exemplo, a representação de ~\ref{code:box3d_1} será preferida.
+Neste exemplo, a representação de caixa apresentada no Código~\ref{code:box3d_1} será preferida.
 
 \begin{lstlisting}[frame=single,caption=Colisão entre caixas\label{code:collisionBoxBox}]
 bool boxBox(box3d* b1, box3d* b2)
