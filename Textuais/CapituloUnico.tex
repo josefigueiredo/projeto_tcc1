@@ -15,11 +15,7 @@ Detecção de colisão entre objetos em simulações computacionais.
 
 
 \section{Objetivos}
-
-\begin{enumerate}
-\item \subsection{Objetivo Geral}
-\end{enumerate}
-
+\subsection{Objetivo Geral}
 Explicar como funciona a detecção de colisão em simulações computacionais.
 
 \subsection{Objetivos Específicos}
@@ -40,7 +36,7 @@ Por ser uma área ainda em expansão, pouco explorada e conhecida, este estudo s
 
 \section{Referencial Teórico}
 
-Nesta cessão, é apresentada o estudo teórico sobre os principais tópicos envolvendo a detecção de colisão em ambientes simulados.
+Nesta sessão, é apresentada o estudo teórico sobre os principais tópicos envolvendo a detecção de colisão em ambientes simulados.
 
 \subsection{Simulação Computacional}
 
@@ -63,7 +59,7 @@ A simulação é uma poderosa ferramenta que contribue na descoberta de novas
 tecnologias, ou no aprimoramento das existentes.
 
 
-\subsubsection{Representando Formas Geométricas Computacionalmente}
+\subsubsection{Representação Computacional de Formas Geométricas}
 Na computação, não existe maneira correta ou incorreta de representar a
 geometria. A forma usada dependerá  do nível de detalhamento desejado. É possível fazer esta representação de diversas maneiras, por exemplo: forma vetorial, paramétrica ou de forma poligonal.
 
@@ -100,7 +96,7 @@ As esferas são simples de representar computacionalmente, e também
 incrivelmente fáceis de se computar. Para representarmos uma esfera, tudo o que
 precisamos é de um ponto que representará o centro da esfera, e um raio, que
 indica o quanto a esfera se estende em todas as direções a partir do centro.
-Em \citeonline{ericson2004real} é possível encontrar uma implementação geral de esferas, e em \citeonline{bourg2013physics} é possível perceber na prática como usar uma bouding sphere.
+Em \citeonline{ericson2004real} é possível encontrar uma implementação geral de esferas, e em \citeonline{bourg2013physics} é possível perceber na prática como usar uma bounding sphere.
 
 \begin{lstlisting}[frame=single,caption=Representação de esfera\label{code:sphere3d}]
 class sphere3d {
@@ -130,13 +126,13 @@ vetores, onde um indica o canto inferior esquerdo, e o outro o canto superior di
 Outras formas populares de se representar caixas são:
 Ponto central mais meias larguras que se estenderão do centro até as bordas da caixa.
 Ponto inferior esquerdo, e a extensão de suas arestas no eixo x, y e z.
-A seguir as três formas descritas são representadas. Ambas fornecem vantagens e
+As três formas apresentadas no Código~\ref{code:box3d_1}, ~\ref{code:box3d_2} e ~\ref{code:box3d_3} fornecem vantagens e
 desvantagens dependendo do contexto em que forem utilizadas.
 Em \citeonline{ericson2004real} é possível encontrar uma explicação mais detalhada de como estas representações funcionam.
 
 Caixa representada pelo ponto mínimo e máximo:
 
-\begin{lstlisting}[frame=single,caption=Representação de caixa\label{code:box3d_1}]
+\begin{lstlisting}[frame=single,caption=Representação de caixa ponto mínimo e máximo\label{code:box3d_1}]
 class box3d_1{
 vector3d min;
 vector3d max;
@@ -145,7 +141,7 @@ vector3d max;
 
 Caixa com meia larguras
 
-\begin{lstlisting}[frame=single,caption=Exemplo de caixa 2\label{code:box3d_2}]
+\begin{lstlisting}[frame=single,caption=Exemplo de caixa com meias larguras\label{code:box3d_2}]
 class box3d_2
 {
 vector3d center;
@@ -155,7 +151,7 @@ vector3d radius;
 
 Caixa com ponto mínimo e medidas completas:
 
-\begin{lstlisting}[frame=single,caption=Exemplo de caixa 3\label{code:box3d_3}]
+\begin{lstlisting}[frame=single,caption=Exemplo de caixa  com arestas\label{code:box3d_3}]
 class box3d_3 {
 vector3d min;
 vector3d measures;
@@ -167,17 +163,21 @@ contextos diferentes dependendo o requisito. O Código~\ref{code:box3d_1} é exc
 porque já tem seus limites bem definidos e pode ser usada mais facilmente para
 sucessivos testes. Porém tem a desvantagem de precisar fazer uma atualização
 extra quando precisar ser movimentada.
+
 No entanto, o Código~\ref{code:box3d_2} tem a vantagem de precisar atualizar apenas o ponto
 central, porém, quando necessário, terá as operações para computar seus pontos
 mínimos e máximos. Este tipo de estrutura também é conhecida como esfera de 3
-raios. Em octrees ela é a representação preferida para a representação de nós
+raios.
+
+Em octrees ela é a representação preferida para a representação de nós
 pois é fácil de representar e de se computar.
+
 O Código~\ref{code:box3d_3} Lembra muito a criação de uma janela na computação gráfica. Ela tem seu
 ponto mínimo, e o comprimento de suas arestas até o ponto máximo.
 
 Os 3 exemplos abaixo criam 3 caixas exatamente com os mesmos pontos finais.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{example_box3d}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo de criação de 3 caixas\label{example_box3d}]
 box3d_1 b1({10,10,10}, {20,20,20});
 box3d_2 b2({15,15,15}, {5,5,5});
 box3d_3 b3({10,10,10}, {10,10,10});
@@ -192,7 +192,9 @@ Os poliedros nada mais são que uma nuvem de pontos que representam uma
 geometria específica. Os poliedros certamente são a maneira mais precisa de
 representar geometria, porém eles apresentam uma dualidade significativa. Quanto mais
 detalhado o poliedro, mais caro será para computar colisões, rotações e
-translações. Existem dois tipos de poliedros. Poliedros convexos e poliedros
+translações.
+
+Existem dois tipos de poliedros. Poliedros convexos e poliedros
 côncavos. Poliedros convexos são poliedros que são coplanares ou que possuem
 suas faces voltadas para fora. Por outro lado, poliedros côncavos possuem
 pelo menos uma de suas faces voltada para o interior.
@@ -224,7 +226,7 @@ AABB* aabb=new AABB(s);
 \end{lstlisting}
 
 
-No código apresentado no Código~\ref{code:aabbSphere}, a bounding box desta esfera será 2 vetores encapsulando completamente em um cubo. Seus vetores respectivamente serão: min=0,0,0 max=10,10,10
+Como apresentado no Código~\ref{code:aabbSphere}, a bounding box desta esfera será 2 vetores encapsulando completamente em um cubo. Seus vetores respectivamente serão: min=0,0,0 max=10,10,10
 
 Já a estrutura OBB não está presa a nenhum eixo, facilitando a rotação dos objetos contidos nela. A estrutura OBB, apresentada no Código~\ref{code:obb_1},  é representada por um ponto central, com meias medidas para os eixos e uma matriz de rotação. Segundo Ericson a estrutura OBBS é computacionalmente custosa e de difícil implementação.
 
@@ -240,14 +242,10 @@ matrix3x3 orientation;
 
 Neste trabalho optou-se pela utilização da estrutura AABB, devido à relativa facilidade de implementação em relação a estrutura OBB
 
-\subsubsection{ Corpo Rígido}
-\subsubsection{ O que é um corpo rígido?}
-
+\subsubsection{Corpo Rígido}
 Segundo Bourg e Bywalec (2013, tradução nossa) Um corpo rígido é um conjunto de partículas  que permanecem a distâncias fixas umas das outras  sem nenhum tipo de translação ou rotação entre elas. Em outras palavras,  um corpo rígido não mudará de forma enquanto se move, ou sua deformação é tão insignificante que pode ser desprezada.
 
 Um corpo rígido é  frequentemente representado como tendo uma posição, uma orientação  e  dimensões para representar seu volume. Estes são requisitos mínimos para a  sua definição, porém, dependendo do nível de precisão desejada, pode-se adicionar mais atributos como tensores de inércia, velocidades lineares e angulares, coeficiente de restituição, e o que mais for necessário para que se atinja os objetivos desejados.
-
-\subsubsection{ Diferença entre corpo dinâmico e corpo estático}
 
 Existem 3 classes principais de corpos que podem ser representadas em uma simulação:
 Corpos rígidos, que não se deformam  enquanto se movem, ou caso se deformem, são capazes de voltar a sua forma original;
@@ -258,7 +256,7 @@ Corpos macios, que podem deformar enquanto se movem ou por ação de forças ou 
 Ou corpos estáticos, que nada mais é que uma sub-classificação de um corpo rígido ou um corpo macio,  mas com a ausência de massa, ficando a sim, estacionário na posição em que se
 encontra...
 
-\subsubsection{"Representação de um Corpo Rígido}
+\subsubsection{Representação de um Corpo Rígido}
 
 Para fins de exemplos, a seguinte representação de corpo rígido será adotada:
 
@@ -266,20 +264,19 @@ Para fins de exemplos, a seguinte representação de corpo rígido será adotada
 class RigidBody
 {
 public:
-float mass;//Massa do objeto...
-float restitution;//Coeficiente de restituicao...
-vector3d lastPosition;//Ultima posicao do objeto...
-vector3d position;//Posicao atual do objeto...
-vector3d velocity;//Velocidade do objeto...
-vector3d forces;//Forcas que estao atuando sobre o objeto...
-AABB* aabb;//Forma do objeto...
+float mass;
+float restitution;
+vector3d lastPosition;
+vector3d position;
+vector3d velocity;
+vector3d forces;
+AABB* aabb;
 };
 \end{lstlisting}
 
 \subsection{Detecção de Colisão}
 Segundo \citeonline{bourg2013physics}, a detecção de colisão é um problema de geometria computacional que
 determina se e onde, dois ou mais objetos colidiram.
-
 Uma colisão pode ser detectada de diversas maneiras dependendo da natureza dos
 objetos envolvidos como esferas e caixas.
 
@@ -362,6 +359,19 @@ Os objetos adicionados nesta estrutura tentarão ser adicionados no menor nó qu
 seja capaz de conter todo o volume do objeto. Com esta compartimentação
 espacial, os objetos só precisam verificar a possibilidade de colisão com seus
 irmãos, e com os nós mais profundos acelerando assim o processo.
+
+\begin{figure}[htb]
+	\caption{\label{fig:figura1} Legenda da figura}
+	\includegraphics[width=\textwidth]{Imagens/Figura_7.11.png
+	\legend{Fonte: \cite{bourg2013physics}. }
+	
+\end{figure}
+Descrição da figura ~\ref{fig:figura1} }:
+A imagem mostra um quadrado com 15 objetos no interior. Os objetos têm forma de circunferência e não há nenhuma colisão entre eles. O quadrado maior (representa o primeiro nível) é então dividido ao meio (na vertical e na horizontal), formando agora 4 subquadrados (representam o segundo nível). Na imagem, esta divisão é feita por linha de pontinhos. A seguir uma nova divisão ocorre e cada subquadrado é dividido novamente (na vertical e na horizontal) em 4 novos subquadrados (representam o terceiro nível). Na imagem, esta divisão é feita por linhas tracejadas. Ao final das divisões, cada quadrado foi dividido em 4 subquadrados (formando na imagem 8 subquadrados)
+
+Os objetos dentro do cubo inicial são agora classificados em função de sua posição estão nesta divisão. Se foram “cortados” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
+
+A primeira divisão, de linha pontilhada “corta” 3 bolinhas (estão destacadas em cinza escuro). Estas bolinhas pertencem ao cubo inicial (primeiro nível); As linhas tracejadas “cortam” 5 bolinhas (estão destacadas em cinza claro). Estas bolinhas pertencem aos cubos da primeira divisão (segundo nível); As bolinhas que não estão sendo cortadas por nenhuma linha (estão destacadas em branco), ficaram exatamente dentro das divisões menores, pertencendo ao terceiro nível.
 
 \subsubsection{Ordenar e Varrer}
 
