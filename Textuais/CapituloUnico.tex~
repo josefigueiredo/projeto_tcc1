@@ -280,35 +280,71 @@ determina se e onde, dois ou mais objetos colidiram.
 Uma colisão pode ser detectada de diversas maneiras dependendo da natureza dos
 objetos envolvidos como esferas e caixas.
 
-Para algumas situações, uma colisão pode ser detectada se a distância entre os dois objetos está abaixo de uma
+Para algumas situações, uma colisão
+pode ser detectada se a distância entre os dois objetos está a baixo de uma
 determinada tolerância. Em outros casos, os objetos podem estar se sobrepondo
 em um ou mais pontos.
 
-Após uma colisão ser detectada, diversos dados precisam ser coletados para o processamento e resolução da colisão, que é feito posteriormente. Os dados coletados dependerão da natureza do simulador. Para um simulador de física, por exemplo, pode ser necessário o ponto ou pontos de contato onde os objetos colidiram, bem como a velocidade relativa destes objetos no instante da colisão.
+Após uma colisão ser detectada, informações devem ser coletadas para a
+resolução da colisão posteriormente.
 
-Outros dados relevantes para coleta na detecção de colisão são: o vetor normal, que é um vetor unitário que indica a direção em que a colisão aconteceu; e  a profundidade de sobreposição ou de penetração dos objetos, que estabelece o limite para que os objetos se toquem e não se sobreponham.
+Quais informações coletar depende muito da natureza do simulador. Um simulador
+de física por exemplo pode precisar do ponto, ou pontos de contato que fizeram
+os objetos colidirem, além de sua velocidade relativa no instante da colisão.
+
+
+Outras informações importantes para se coletar durante a detecção de colisão
+inclue o vetor normal, que é um vetor unitário que apontará na direção em que a
+colisão aconteceu.
+
+
+E por último, a profundidade de sobreposição, ou de penetração dos objetos.
+Esta informação é necessária para separar os objetos para que eles apenas se
+toquem, e não se sobreponham.
+
 
 \subsection{Fases da Detecção de Colisão}
-A detecção de colisão é dividida em duas áreas principais que são fase ampla e fase estreita.
 
-A fase ampla, segundo \citeonline{ericson2004real}, é responsável por determinar rapidamente pares de objetos que possivelmente estejam colidindo, descartando aqueles objetos que não estão.
-Nesta fase, os delimitadores AABBS das formas geométricas são testados pois possuem algoritmos simplificados e eficientes para esta tarefa.
-Quando uma colisão entre dois AABBS é detectada, a sua geometria contida pode não estar colidindo com a geometria do segundo AABB. Então estes dois objetos são agrupados para uma análise mais detalhada em uma fase posterior.
+A detecção de colisão é dividida em duas áreas principais que são:
 
-Já a fase estreita, também segundo \citeonline{ericson2004real},  é responsável pelo trabalho mais detalhado e preciso da detecção de colisão.
-É nesta fase onde os algoritmos e técnicas específicas são aplicadas para determinar se de fato os pares de objetos indicados pela fase anterior estão colidindo.
-Caso estejam colidindo, informações como vetor normal, ponto de contato e profundidade de penetração devem ser calculados para uso posterior.
+\subsubsection{Fase Ampla}
+A fase ampla é responsável por determinar rapidamente pares de objetos que
+possivelmente estejam colidindo, e descartar aqueles objetos que não estão.
+
+Nesta fase, os AABBS das formas geométricas são testados pois possuem
+algoritmos simplificados e eficientes para esta tarefa.
+
+Quando uma colisão entre dois AABBS é detectada, a sua geometria contida pode
+não estar colidindo com a geometria do segundo AABB. Então estes dois objetos
+são agrupados para uma análise mais detalhada em uma fase posterior.
+
+\subsubsection{Fase Estreita}
+A fase estreita é responsável pelo trabalho mais detalhado e preciso da
+detecção de colisão.
+
+É nesta fase onde os algoritmos e técnicas específicas são
+aplicadas para determinar se de fato, os pares de objetos suspeitos de colisão
+estão colidindo.
+
+Caso estejam, informações como normal, ponto de contato e profundidade de
+penetração devem ser calculados para uso posterior.
 
 \subsection{Algoritmos para Fase Ampla}
-Em um ambiente simulado podem existir muitos objetos, alguns próximos outros distantes. 
-Ao selecionar um objeto qualquer deste conjunto de objetos queremos saber com quais outros objetos existe a chance de colisão. 
-Em uma situação desta natureza, a complexidade dos testes normalmente é de O(n² ), onde n é o número de objetos a serem t
-estados. Apesar de ser um problema polinomial, esta complexidade ainda é muito dispendiosa, porque os objetos mais distantes espacialmente não precisariam ser testados.
+Um problema da detecção de colisão é que em uma simulação podem existir muitos
+objetos. Alguns distantes, e outros próximos.
 
-Para acelerar este processo, segundo \citeonline{ericson2004real}, existem diversas estruturas de dados e técnicas de compartimentação espacial. 
-A lógica destas técnicas é agrupar os objetos que estão próximos uns dos outros e interromper a busca quando o restante dos objetos estão fora de alcance.
+Quando pegamos um objeto de forma aleatória deste conjunto de objetos queremos saber com quais outros objetos
+existe a chance de colisão.
+Em uma situação desta natureza, a complexidade dos testes normalmente é de $\mathcal{O}(N^2)$, o que
+computacionalmente é muito dispendioso, porque os objetos mais distantes
+espacialmente não precisariam ser testados.
 
-Algumas das estruturas mais populares atualmente são as árvores octrees, grades uniformes e a divisão espacial por hash.
+Para acelerar este processo, existem diversas estruturas de dados e técnicas de compartimentação espacial.
+A lógica destas técnicas é agrupar os objetos que estão próximos uns dos outros
+e interromper a busca quando o restante dos objetos estão fora de alcance.
+
+Algumas das estruturas mais populares atualmente são as árvores octrees, grades
+uniformes e a divisão espacial por hash.
 
 \subsubsection{Octrees}
 
@@ -319,16 +355,24 @@ subdivididos em mais 8 filhos até que um critério de parada seja satisfeito.
 Este critério pode ser uma profundidade máxima para a árvore, ou o tamanho do
 nó que será dividido atingiu um limite mínimo.
 
-Os objetos indexados pela estrutura serão adicionados no menor nó que seja capaz de conter todo o volume do objeto.
-Com esta compartimentação espacial, os objetos só precisam verificar a possibilidade de colisão com seus irmãos, e com os nós mais profundos acelerando assim o processo.
+Os objetos adicionados nesta estrutura tentarão ser adicionados no menor nó que
+seja capaz de conter todo o volume do objeto. Com esta compartimentação
+espacial, os objetos só precisam verificar a possibilidade de colisão com seus
+irmãos, e com os nós mais profundos acelerando assim o processo.
 
-\begin{figure}[htb]
-	\caption{\label{fig:figura1} Legenda da figura}
-	\includegraphics[width=\textwidth]{Imagens/Figura_7.11.png}
-	\legend{Fonte: \cite{bourg2013physics}. }
-\end{figure}
+%\begin{figure}[htb]
+%	\caption{\label{fig:figura1} Legenda da figura}
+%	\includegraphics[width=\textwidth]{Imagens/figura1.png}
+%	\legend{Fonte: \cite{bourg2013physics}. }
+%\end{figure}
 
-Descrição da Figura~\ref{fig:figura1}:
+%\begin{figure}[htb]
+%	\caption{\label{fig:figura1} Legenda da figura}
+%	\includegraphics[width=\textwidth]{Imagens/Figura_7.11.png
+%	\legend{Fonte: \cite{bourg2013physics}. }
+%\end{figure}
+
+%Descrição da figura ~\ref{fig:figura1}:
 A imagem mostra um quadrado com 15 objetos no interior. Os objetos têm forma de circunferência e não há nenhuma colisão entre eles. O quadrado maior (representa o primeiro nível) é então dividido ao meio (na vertical e na horizontal), formando agora 4 subquadrados (representam o segundo nível). Na imagem, esta divisão é feita por linha de pontinhos. A seguir uma nova divisão ocorre e cada subquadrado é dividido novamente (na vertical e na horizontal) em 4 novos subquadrados (representam o terceiro nível). Na imagem, esta divisão é feita por linhas tracejadas. Ao final das divisões, cada quadrado foi dividido em 4 subquadrados (formando na imagem 8 subquadrados)
 
 Os objetos dentro do cubo inicial são agora classificados em função de sua posição estão nesta divisão. Se foram “cortados” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
@@ -366,23 +410,31 @@ selecionado para uma execução futura.
 \begin{lstlisting}[frame=single,caption=Exemplo de ordenar e varrer\label{code:SortAndSweep}]
 void SortAndSweepAABBArray(void)
 {
+    // Sort the array on currently selected sorting axis (gSortAxis)
     qsort(gAABBArray, MAX_OBJECTS, sizeof(AABB *), cmpAABBs);
+    // Sweep the array for collisions
     float s[3] = { 0.0f, 0.0f, 0.0f }, s2[3] = { 0.0f, 0.0f, 0.0f }, v[3];
     for (int i = 0; i < MAX_OBJECTS; i++) {
+          // Determine AABB center point
           Point p = 0.5f * (gAABBArray[i]->min + gAABBArray[i]->max);
+          // Update sum and sum2 for computing variance of AABB centers
           for (int c = 0; c < 3; c++) {
                 s[c] += p[c];
                 s2[c] += p[c] * p[c];
           }
+          // Test collisions against all possible overlapping AABBs following current one
           for (int j = i + 1; j < MAX_OBJECTS; j++) {
+                // Stop when tested AABBs are beyond the end of current AABB
                 if (gAABBArray[j]->min[gSortAxis] > gAABBArray[i]->max[gSortAxis])
                       break;
                 if (AABBOverlap(gAABBArray[i], gAABBArray[j]))
                       TestCollision(gAABBArray[i], gAABBArray[j]);
           }
       }
+    // Compute variance (less a, for comparison unnecessary, constant factor)
         for (int c = 0; c < 3; c++)
               v[c] = s2[c] - s[c] * s[c] / MAX_OBJECTS;
+        // Update axis sorted to be the one with greatest AABB variance
         gSortAxis = 0;
         if (v[1] > v[0]) gSortAxis = 1;
         if (v[2] > v[gSortAxis]) gSortAxis = 2;
@@ -408,12 +460,16 @@ A representação da esfera descrita no Código~\ref{code:sphere3d} será utiliz
 \begin{lstlisting}[frame=single,caption=Colisão entre esferas\label{code:collisionSphereSphere}]
 bool sphereSphere(sphere3d* s1, sphere3d* s2)
 {
+//Calcular a distancia quadrada entre os centros das esferas...
 vector3d v=s1->center-s2->center;
 float dist=((v.x*v.x)+(v.y*v.y)+(v.z*v.z));
+//Calcula a soma dos raios das esferas ao quadrado...
 float sqRadius=s1->radius+s2->radius;
 sqRadius=sqRadius*sqRadius;
+//Caso a distancia seja menor ou igual a soma dos raios ao quadrado, as esferas estao colidindo...
 if(dist<=sqRadius)
 {
+//Coletar informacoes relevantes aqui...
 return true;
 }
 return false;
@@ -434,12 +490,17 @@ Neste exemplo, a representação de caixa apresentada no Código~\ref{code:box3d
 \begin{lstlisting}[frame=single,caption=Colisão entre caixas\label{code:collisionBoxBox}]
 bool boxBox(box3d* b1, box3d* b2)
 {
+//Teste no eixo x...
 if((b1->min.x>b2->max.x)||(b2->min.x>b1->max.x))
 return false;
+//Teste no eixo y...
 if((b1->min.y>b2->max.y)||(b2->min.y>b1->max.y))
 return false;
+//Teste no eixo z...
 if((b1->min.z>b2->max.z)||(b2->min.z>b1->max.z))
 return false;
+//Todos os intervalos se sobrepoem, entao as caixas estao colidindo.
+//Coletar informacoes aqui...
 return true;
 }
 \end{lstlisting}
@@ -460,16 +521,18 @@ bool spherebox(sphere3d* s, box3d* b)
 vector3d closestPoint;
                        for (int i = 0; i < 3; i++) {
                              float v = s->center[i];
-                             if (v < b->min[i]) v = b->min[i];
-                             if (v > b->max[i]) v = b->max[i];
+                             if (v < b->min[i]) v = b->min[i]; // v = max(v, b.min[i])
+                             if (v > b->max[i]) v = b->max[i]; // v = min(v, b.max[i])
                              closestPoint[i] = v;
                        }
 float sqdist=((closestPoint-s->center)*(closestPoint-s->center));
 float sqradius=(s->radius*s->radius);
 if(sqdist<=sqradius)
 {
+//Coletar as informacoes...
 return true;
 }
+//Nao esta colidindo...
 return false;
 }
 \end{lstlisting}
@@ -523,21 +586,32 @@ O exemplo de código a seguir exemplifica este processo...
 \begin{lstlisting}[frame=single,caption=Exemplo de resolução de colisão\label{code:solveCollision}]
 void solveCollision(object* b1, object* b2, vector3d contactPoint, vector3d normal, vector3d depth)
 {
+//Supondo que b1 seja estatico e b2 dinamico...
 if(b1->mass<=0.0f)
 {
+//Verificar se r2 esta se afastando de r1 utilizando o produto escalar dos vetores...
 float dir=dotProduct(r2->velocity, normal);
+//Se dir for maior que 0, significa que os objetos estao se afastando um do outro, portanto nao a nada a ser feito.
 if(dir>0) return;
-if(depth>0)
+//Calcular o vetor de translacao minima se necessario...
+if(depth>0)//b2 esta penetrando em b1...
 {
+//Multiplica o vetor unitario normal pela profundidade...
+//Isso nos dara quanto devemos transladar b2 para que ele apenas se apoie em b1...
 vector3d mtv=normal*depth;
+//move b2 para longe de b1...
 b2->Translate(mtv);
 }
+//Calcular o impulso a ser aplicado em b2...
 float j=-(b2->velocity*normal) * (b2->restitution+1)*b2->mass;
+//Aplica o impulso na direcao da normal...
 vector3d impulse=(j*info.normal);
+//Modifica a velocidade...
 r1->velocity+=(1 / r1->mass) * impulse;
 }
 else
 {
+//Algo semelhante caso os dois objetos sejam dinamicos...
 }
 }
 \end{lstlisting}
@@ -548,8 +622,6 @@ velocidade tangencial, velocidades angulares e torques.
 
 Em \citeonline{bourg2013physics} explicações mais detalhadas podem ser encontradas bem como algoritmos e
 métodos mais sofisticados.
-
-
 
 
 \section{Metodologia}
@@ -600,9 +672,9 @@ produto_triplo_escalar()
 
 A classe vetor3d representará as coordenadas cartesianas tridimensionais no espaço.
 Existem três componentes fundamentais:
-eixo_X: Representa a distância do ponto em relação a uma origem de referência horizontalmente.
-eixo_y: Representa verticalmente a distância do ponto até a origem.
-eixo_z: É o eixo perpendicular ao eixo x e eixo y. Utilizado para dar profundidade.
+%eixo_X: Representa a distância do ponto em relação a uma origem de referência horizontalmente.
+%eixo_y: Representa verticalmente a distância do ponto até a origem.
+%eixo_z: É o eixo perpendicular ao eixo x e eixo y. Utilizado para dar profundidade.
 
 O vetor também tem diversas operações associadas como soma, subtração,
 multiplicação e divisão. Também possui métodos específicos como normalização,
@@ -856,4 +928,6 @@ Dezembro
 primeira quinzena:
 Finalização e entrega do artigo final
 Defesa do Trabalho de conclusão de curso
+
+
 
