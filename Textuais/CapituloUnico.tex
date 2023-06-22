@@ -66,7 +66,7 @@ Neste estudo será adotada a representação vetorial, devido a sua simplicidade
 
 Para representação dessas formas geométricas, são utilizados pontos de coordenadas cartesianas, definidos em uma estrutura de vetor tridimensional. O código a seguir demonstra essa estrutura.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de vetor 3d\label{code:vec3d_1}]
 class vector3d{
 float x;
 float y;
@@ -96,7 +96,7 @@ incrivelmente fáceis de se computar. Para representarmos uma esfera, tudo o que
 precisamos é de um ponto que representará o centro da esfera, e um raio, que
 indica o quanto a esfera se estende em todas as direções a partir do centro.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Representação de esfera\label{code:sphere3d}]
 class sphere3d {
 public:
 vector3d center;
@@ -131,7 +131,7 @@ desvantagens dependendo do contexto em que forem utilizadas.
 
 Caixa representada pelo ponto mínimo e máximo:
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Representação de caixa\label{code:box3d_1}]
 class box3d_1{
 vector3d min;
 vector3d max;
@@ -140,7 +140,7 @@ vector3d max;
 
 Caixa com meia larguras
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de caixa 2\label{code:box3d_2}]
 class box3d_2
 {
 vector3d center;
@@ -150,7 +150,7 @@ vector3d radius;
 
 Caixa com ponto mínimo e medidas completas:
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de caixa 3\label{code:box3d_3}]
 class box3d_3 {
 vector3d min;
 vector3d measures;
@@ -158,21 +158,21 @@ vector3d measures;
 \end{lstlisting}
 
 Todas elas servem para representar a mesma coisa, mas podem ser utilizadas em
-contextos diferentes dependendo o requisito. A box3d_1 é excelente para aabbs
-porque já tem seus limites bem definidos e pode ser usado mais facilmente para
+contextos diferentes dependendo o requisito. A ~\ref{code:box3d_1} é excelente para aabbs
+porque já tem seus limites bem definidos e pode ser usada mais facilmente para
 sucessivos testes. Porém tem a desvantagem de precisar fazer uma atualização
 extra quando precisar ser movimentada.
-No entanto, a box3d_2 tem a vantagem de precisar atualizar apenas o ponto
+No entanto, a ~\ref{code:box3d_2} tem a vantagem de precisar atualizar apenas o ponto
 central, porém, quando necessário, terá as operações para computar seus pontos
 mínimos e máximos. Este tipo de estrutura também é conhecida como esfera de 3
 raios. Em octrees ela é a representação preferida para a representação de nós
 pois é fácil de representar e de se computar.
-box3d_3 Lembra muito a criação de uma janela na computação gráfica. Ela tem seu
+A ~\ref{code:box3d_3} Lembra muito a criação de uma janela na computação gráfica. Ela tem seu
 ponto mínimo, e o comprimento de suas arestas até o ponto máximo.
 
 Os 3 exemplos abaixo criam 3 caixas exatamente com os mesmos pontos finais.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{example_box3d}]
 box3d_1 b1({10,10,10}, {20,20,20});
 box3d_2 b2({15,15,15}, {5,5,5});
 box3d_3 b3({10,10,10}, {10,10,10});
@@ -194,7 +194,7 @@ pelo menos uma de suas faces voltada para o interior.
 Neste trabalho não usaremos poliedros pois eles utilizam algoritmos mais
 sofisticados para operarem sobre nuvens de pontos para detectar colisões.
 Alguns dos algoritmos mais famosos para isto incluem o
-GJK(GilbertJohnsonKeerthi), ou o Teorema dos eixos separadores, na sigla em
+GJK(Gilbert Johnson Keerthi), ou o Teorema dos eixos separadores, na sigla em
 inglês (SAT).
 
 \subsection{ Estruturas para delimitação de volumes}
@@ -233,7 +233,7 @@ pode ser especialmente custoso de se computar em poliedros com muitos vértices.
 No entanto, a vantagem é que o teste de colisão é eficiente e relativamente
 simples de se computar.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de AABB\label{codigo1}]
 class AABB
 {
 public:
@@ -271,7 +271,7 @@ difíceis de se implementar.
 
 Algumas representações típicas de obbs se seguem:
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Código de exemplo de OBB\label{code:obb_1}]
 class obb_1
 {
 public:
@@ -281,7 +281,7 @@ matrix3x3 orientation;
 };
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de OBB\label{code:obb_2}]
 class obb_2
 {
 public:
@@ -315,6 +315,23 @@ Corpos macios, que podem deformar enquanto se movem ou por ação de forças ou 
 Ou corpos estáticos, que nada mais é que uma sub-classificação de um corpo rígido ou um corpo macio,  mas com a ausência de massa, ficando a sim, estacionário na posição em que se
 encontra...
 
+\subsubsection{"Representação de um Corpo Rígido}
+
+Para fins de exemplos, a seguinte representação de corpo rígido será adotada:
+
+\begin{lstlisting}[frame=single,caption=Exemplo de corpo rígido\label{code:RigidBody}]
+class RigidBody
+{
+public:
+float mass;//Massa do objeto...
+float restitution;//Coeficiente de restituicao...
+vector3d lastPosition;//Ultima posicao do objeto...
+vector3d position;//Posicao atual do objeto...
+vector3d velocity;//Velocidade do objeto...
+vector3d forces;//Forcas que estao atuando sobre o objeto...
+AABB* aabb;//Forma do objeto...
+};
+\end{lstlisting}
 
 \subsection{Detecção de Colisão}
 Segundo \citeonline{bourg2013physics}, a detecção de colisão é um problema de geometria computacional que
@@ -378,7 +395,7 @@ objetos. Alguns distantes, e outros próximos.
 
 Quando pegamos um objeto de forma aleatória deste conjunto de objetos queremos saber com quais outros objetos
 existe a chance de colisão.
-Em uma situação desta natureza,a complexidade dos testes normalmente é de N^2, o que
+Em uma situação desta natureza, a complexidade dos testes normalmente é de $\mathcal{O}(N^2)$, o que
 computacionalmente é muito dispendioso, porque os objetos mais distantes
 espacialmente não precisariam ser testados.
 
@@ -403,13 +420,249 @@ seja capaz de conter todo o volume do objeto. Com esta compartimentação
 espacial, os objetos só precisam verificar a possibilidade de colisão com seus
 irmãos, e com os nós mais profundos acelerando assim o processo.
 
-
 \subsubsection{Ordenar e Varrer}
 
+Na detecção de colisão, existe uma categoria de algoritmos denominada de
+classificação e varredura. Estes algoritmos tem como objetivo determinar grupos
+de objetos que estão colidindo uns com os outros.
+
+Esta categoria de algoritmos é dividida em duas etapas principais:
+
+Classificação: Classifica os objetos seguindo um critério específico. Este
+critério pode ser ordenar os objetos ao longo de um determinado eixo.
+
+Varredura: Varre os objetos classificados detectando interseções entre os os
+objetos que estão na projeção do intervalo especificado.
+
+Estes algoritmos possuem diversas vantagens de uso como eficiência de memória,
+fácil implementação, e eficiência computacional.
+
+Neste trabalho, o algoritmo sort and sweep (Ordenar e varrer) explicado
+detalhadamente em \citeonline{ericson2004real} será utilizado para o desenvolvimento.
+
+O algoritmo começa ordenando o vetor de entrada por um dos eixos X, Y ou Z., em
+seguida, o vetor é percorrido, e em cada iteração os objetos são testados
+quanto a colisão. Caso o o limite inferior do ~\ref{code:aabb} seja maior do
+que o limite superior do AABB testado, o laço interno pode parar com segurança
+pois não existe mais risco de colisão com os próximos objetos. Em seguida, a
+variância dos eixos são calculados, e o eixo com a maior variância é
+selecionado para uma execução futura.
+
+\begin{lstlisting}[frame=single,caption=Exemplo de ordenar e varrer\label{code:SortAndSweep}]
+void SortAndSweepAABBArray(void)
+{
+    // Sort the array on currently selected sorting axis (gSortAxis)
+    qsort(gAABBArray, MAX_OBJECTS, sizeof(AABB *), cmpAABBs);
+    // Sweep the array for collisions
+    float s[3] = { 0.0f, 0.0f, 0.0f }, s2[3] = { 0.0f, 0.0f, 0.0f }, v[3];
+    for (int i = 0; i < MAX_OBJECTS; i++) {
+          // Determine AABB center point
+          Point p = 0.5f * (gAABBArray[i]->min + gAABBArray[i]->max);
+          // Update sum and sum2 for computing variance of AABB centers
+          for (int c = 0; c < 3; c++) {
+                s[c] += p[c];
+                s2[c] += p[c] * p[c];
+          }
+          // Test collisions against all possible overlapping AABBs following current one
+          for (int j = i + 1; j < MAX_OBJECTS; j++) {
+                // Stop when tested AABBs are beyond the end of current AABB
+                if (gAABBArray[j]->min[gSortAxis] > gAABBArray[i]->max[gSortAxis])
+                      break;
+                if (AABBOverlap(gAABBArray[i], gAABBArray[j]))
+                      TestCollision(gAABBArray[i], gAABBArray[j]);
+          }
+      }
+    // Compute variance (less a, for comparison unnecessary, constant factor)
+        for (int c = 0; c < 3; c++)
+              v[c] = s2[c] - s[c] * s[c] / MAX_OBJECTS;
+        // Update axis sorted to be the one with greatest AABB variance
+        gSortAxis = 0;
+        if (v[1] > v[0]) gSortAxis = 1;
+        if (v[2] > v[gSortAxis]) gSortAxis = 2;
+    }
+\end{lstlisting}
+
+\subsection{Algoritmos de Fase Estreita}
+
+Após  os testes da fase ampla retornarem pares de objetos que possivelmente
+estejam colidindo, é a vez da fase estreita ser executada.
+
+Nesta fase, os algoritmos mais custosos e complexos computacionalmente são
+executados para determinar com certeza se os objetos estão em colisão.
+Caso estejam, pode-se coletar as informações sobre a colisão como normal, ponto
+de contato e profundidade de penetração para resolver a colisão mais tarde.
+
+\subsubsection{Esfera contra Esfera}
+
+Para que duas esferas estejam em colisão, a soma de seus raios deve ser menor
+ou igual a distância de seus centros segundo \citeonline{ericson2004real}.
+A representação da esfera descrita em ~\ref{code:sphere3d} será utilizada.
+
+\begin{lstlisting}[frame=single,caption=Colisão entre esferas\label{code:collisionSphereSphere}]
+bool sphereSphere(sphere3d* s1, sphere3d* s2)
+{
+//Calcular a distancia quadrada entre os centros das esferas...
+vector3d v=s1->center-s2->center;
+float dist=((v.x*v.x)+(v.y*v.y)+(v.z*v.z));
+//Calcula a soma dos raios das esferas ao quadrado...
+float sqRadius=s1->radius+s2->radius;
+sqRadius=sqRadius*sqRadius;
+//Caso a distancia seja menor ou igual a soma dos raios ao quadrado, as esferas estao colidindo...
+if(dist<=sqRadius)
+{
+//Coletar informacoes relevantes aqui...
+return true;
+}
+return false;
+}
+\end{lstlisting}
+
+Neste exemplo, a soma dos raios foram elevados ao quadrado para realizar o
+teste contra a distância também ao quadrado entre os centros das esferas.
+Esta é uma prática recomendada pois o cálculo de raiz quadrada pode ser muito
+lento para ser realizada como descrito em \citeonline{ericson2004real} e \citeonline{bourg2013physics}.
+
+\subsubsection{Caixa contra Caixa}
+
+Para que duas caixas estejam em colisão, precisa existir sobreposição nos três
+eixos testados.
+Neste exemplo, a representação de ~\ref{code:box3d_1} será preferida.
+
+\begin{lstlisting}[frame=single,caption=Colisão entre caixas\label{code:collisionBoxBox}]
+bool boxBox(box3d* b1, box3d* b2)
+{
+//Teste no eixo x...
+if((b1->min.x>b2->max.x)||(b2->min.x>b1->max.x))
+return false;
+//Teste no eixo y...
+if((b1->min.y>b2->max.y)||(b2->min.y>b1->max.y))
+return false;
+//Teste no eixo z...
+if((b1->min.z>b2->max.z)||(b2->min.z>b1->max.z))
+return false;
+//Todos os intervalos se sobrepoem, entao as caixas estao colidindo.
+//Coletar informacoes aqui...
+return true;
+}
+\end{lstlisting}
+
+Existem outras variações para este mesmo algoritmo descritos com mais detalhes
+em \citeonline{ericson2004real}.
+
+\subsubsection{Esfera contra Caixa}
+
+O teste de esfera e caixa pode ser realizado em duas etapas principais:
+Primeiro: encontrar o ponto mais próximo da caixa em relação a esfera.
+Segundo: Calcular a distância entre o ponto mais próximo e o centro da esfera.
+Caso a distância seja menor que o raio da esfera, então existe uma colisão.
+
+\begin{lstlisting}[frame=single,caption=Colisão entre esfera e caixa\label{code:collisionSphereBox}]
+bool spherebox(sphere3d* s, box3d* b)
+{
+vector3d closestPoint;
+                       for (int i = 0; i < 3; i++) {
+                             float v = s->center[i];
+                             if (v < b->min[i]) v = b->min[i]; // v = max(v, b.min[i])
+                             if (v > b->max[i]) v = b->max[i]; // v = min(v, b.max[i])
+                             closestPoint[i] = v;
+                       }
+float sqdist=((closestPoint-s->center)*(closestPoint-s->center));
+float sqradius=(s->radius*s->radius);
+if(sqdist<=sqradius)
+{
+//Coletar as informacoes...
+return true;
+}
+//Nao esta colidindo...
+return false;
+}
+\end{lstlisting}
+
+Implementações mais sofisticadas podem ser encontradas em \citeonline{ericson2004real}.
+
+\subsubsection{Informações sobre a Colisão}
+
+Se o objetivo for determinar  se os objetos colidem, os testes demonstrados são
+suficientes. No entanto, se o objetivo for resolver a colisão informações adicionais devem
+ser coletadas durante o processo de detecção de colisão. O processo de coleta
+de informações é um problema difícil segundo \citeonline{ericson2004real}.
+Quais informações coletar depende muito dos objetivos do sistema. Porém, três
+informações são fundamentais:
+Ponto de contato: Retorna um ou mais pontos de contato indicando onde os objetos colidiram.
+Normal da colisão: Este é um vetor unitário apontando a direção em que os objetos devem ser movidos para que eles parem de colidir.
+Profundidade de penetração: É o quanto os objetos estão se sobrepondo. Esta
+informação é utilizada juntamente com a normal de colisão para calcular o vetor
+de translação mínima (VTM) ou (MTV) em inglês, necessário para separar os dois
+objetos.
+
+Cuidados Adicionais devem ser tomados ao se determinar a normal da colisão como
+por exemplo, se uma esfera colidir contra uma caixa, e seu centro estiver
+dentro da caixa, o vetor normal será um vetor nulo, o que poderá resultar em
+comportamentos indesejados na hora de resolver a colisão.
 
 \subsection{Resolução de Colisão}
 
+Após detectar uma colisão entre dois objetos torna-se necessário resolver
+a mesma. Em simulações que não requerem um realismo muito grande, apenas a
+correção das posições dos objetos torna-se necessária.
 
+Em simulações mais avançadas, como simulações de física, outros métodos podem
+ser utilizados como a resolução de colisão por impulso.
+
+Neste método, características físicas dos objetos são levados em consideração
+para que os objetos reajam de forma adequada e mais natural.
+
+Outro cuidado deve-se ser levado em conta nesta etapa.
+Os objetos em colisão podem ser um objeto estático e um objeto dinâmico, ou
+dois objetos dinâmicos. A colisão não deve ser resolvida caso os dois objetos
+em colisão sejam estáticos.
+Caso um dos objetos seja dinâmico e o outro estático, a resolução da colisão
+deve atuar apenas no objeto dinâmico.
+Caso os dois objetos sejam dinâmicos, a resolução deve atuar sobre os dois
+objetos em direções opostas.
+
+O exemplo de código a seguir exemplifica este processo...
+
+
+\begin{lstlisting}[frame=single,caption=Exemplo de resolução de colisão\label{code:solveCollision}]
+void solveCollision(object* b1, object* b2, vector3d contactPoint, vector3d normal, vector3d depth)
+{
+//Supondo que b1 seja estatico e b2 dinamico...
+if(b1->mass<=0.0f)
+{
+//Verificar se r2 esta se afastando de r1 utilizando o produto escalar dos vetores...
+float dir=dotProduct(r2->velocity, normal);
+//Se dir for maior que 0, significa que os objetos estao se afastando um do outro, portanto nao a nada a ser feito.
+if(dir>0) return;
+//Calcular o vetor de translacao minima se necessario...
+if(depth>0)//b2 esta penetrando em b1...
+{
+//Multiplica o vetor unitario normal pela profundidade...
+//Isso nos dara quanto devemos transladar b2 para que ele apenas se apoie em b1...
+vector3d mtv=normal*depth;
+//move b2 para longe de b1...
+b2->Translate(mtv);
+}
+//Calcular o impulso a ser aplicado em b2...
+float j=-(b2->velocity*normal) * (b2->restitution+1)*b2->mass;
+//Aplica o impulso na direcao da normal...
+vector3d impulse=(j*info.normal);
+//Modifica a velocidade...
+r1->velocity+=(1 / r1->mass) * impulse;
+}
+else
+{
+//Algo semelhante caso os dois objetos sejam dinamicos...
+}
+}
+\end{lstlisting}
+
+Este é apenas um exemplo básico e simplificado. Em simulações complexas muitos
+Outros atributos devem ser levados em consideração como tensores de inércia,
+velocidade tangencial, velocidades angulares e torques.
+
+Em \citeonline{bourg2013physics} explicações mais detalhadas podem ser encontradas bem como algoritmos e
+métodos mais sofisticados.
 
 
 \section{Metodologia}
@@ -458,8 +711,8 @@ produto_triplo_escalar()
 };
 \end{lstlisting}
 
-A classe vetor3d representará as coordenadas cartesianas tridimensionais no
-espaço. Existem 3 componentes fundamentais:
+A classe vetor3d representará as coordenadas cartesianas tridimensionais no espaço.
+Existem três componentes fundamentais:
 eixo_X: Representa a distância do ponto em relação a uma origem de referência horizontalmente.
 eixo_y: Representa verticalmente a distância do ponto até a origem.
 eixo_z: É o eixo perpendicular ao eixo x e eixo y. Utilizado para dar profundidade.
