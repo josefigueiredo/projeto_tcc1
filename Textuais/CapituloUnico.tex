@@ -335,13 +335,11 @@ Os objetos dentro do cubo inicial são agora classificados em função de sua po
 
 A primeira divisão, de linha pontilhada “corta” 3 bolinhas (estão destacadas em cinza escuro). Estas bolinhas pertencem ao cubo inicial (primeiro nível); As linhas tracejadas “cortam” 5 bolinhas (estão destacadas em cinza claro). Estas bolinhas pertencem aos cubos da primeira divisão (segundo nível); As bolinhas que não estão sendo cortadas por nenhuma linha (estão destacadas em branco), ficaram exatamente dentro das divisões menores, pertencendo ao terceiro nível.
 
-\subsubsection{Ordenar e Varrer}
+\subsubsection{Classificar e Varrer}
 
 Na detecção de colisão, existe uma categoria de algoritmos denominada de
 classificação e varredura. Estes algoritmos tem como objetivo determinar grupos
-de objetos que estão colidindo uns com os outros.
-
-Esta categoria de algoritmos é dividida em duas etapas principais:
+de objetos que estão colidindo uns com os outros. Esta categoria de algoritmos é dividida em duas etapas principais:
 
 Classificação: Classifica os objetos seguindo um critério específico. Este
 critério pode ser ordenar os objetos ao longo de um determinado eixo.
@@ -349,44 +347,43 @@ critério pode ser ordenar os objetos ao longo de um determinado eixo.
 Varredura: Varre os objetos classificados detectando interseções entre os os
 objetos que estão na projeção do intervalo especificado.
 
-Estes algoritmos possuem diversas vantagens de uso como eficiência de memória,
-fácil implementação, e eficiência computacional.
-
-Neste trabalho, o algoritmo sort and sweep (Ordenar e varrer) explicado
-detalhadamente em \citeonline{ericson2004real} será utilizado para o desenvolvimento.
-
-O algoritmo começa ordenando o vetor de entrada por um dos eixos X, Y ou Z., em
+Segundo \citeonline{ericson2004real} o algoritmo começa ordenando o vetor de entrada por um dos eixos X, Y ou Z., em
 seguida, o vetor é percorrido, e em cada iteração os objetos são testados
-quanto a colisão. Caso o limite inferior do Código~\ref{code:aabb} seja maior do
+quanto a colisão. Caso o limite inferior do Código~\ref{code:aabb_1} seja maior do
 que o limite superior do AABB testado, o laço interno pode parar com segurança
 pois não existe mais risco de colisão com os próximos objetos. Em seguida, a
 variância dos eixos são calculados, e o eixo com a maior variância é
 selecionado para uma execução futura.
 
 \begin{lstlisting}[frame=single,caption=Exemplo de ordenar e varrer\label{code:SortAndSweep}]
-void SortAndSweepAABBArray(void)
+void SortAndSweepAABBArray()
 {
-    qsort(gAABBArray, MAX_OBJECTS, sizeof(AABB *), cmpAABBs);
-    float s[3] = { 0.0f, 0.0f, 0.0f }, s2[3] = { 0.0f, 0.0f, 0.0f }, v[3];
-    for (int i = 0; i < MAX_OBJECTS; i++) {
-          Point p = 0.5f * (gAABBArray[i]->min + gAABBArray[i]->max);
-          for (int c = 0; c < 3; c++) {
-                s[c] += p[c];
-                s2[c] += p[c] * p[c];
-          }
-          for (int j = i + 1; j < MAX_OBJECTS; j++) {
-                if (gAABBArray[j]->min[gSortAxis] > gAABBArray[i]->max[gSortAxis])
-                      break;
-                if (AABBOverlap(gAABBArray[i], gAABBArray[j]))
-                      TestCollision(gAABBArray[i], gAABBArray[j]);
-          }
-      }
-        for (int c = 0; c < 3; c++)
-              v[c] = s2[c] - s[c] * s[c] / MAX_OBJECTS;
-        gSortAxis = 0;
-        if (v[1] > v[0]) gSortAxis = 1;
-        if (v[2] > v[gSortAxis]) gSortAxis = 2;
-    }
+qsort(gAABBArray, MAX_OBJECTS, sizeof(AABB *), cmpAABBs);
+float s[3] = {0.0f, 0.0f, 0.0f}, s2[3] = {0.0f, 0.0f, 0.0f}, v[3];
+for (int i = 0; i < MAX_OBJECTS; i++)
+{
+Point p = 0.5f * (gAABBArray[i]->min + gAABBArray[i]->max);
+for (int c = 0; c < 3; c++)
+{
+s[c] += p[c];
+s2[c] += p[c] * p[c];
+}
+for (int j = i + 1; j < MAX_OBJECTS; j++)
+{
+if (gAABBArray[j]->min[gSortAxis] > gAABBArray[i]->max[gSortAxis])
+break;
+if (AABBOverlap(gAABBArray[i], gAABBArray[j]))
+TestCollision(gAABBArray[i], gAABBArray[j]);
+}
+}
+for (int c = 0; c < 3; c++)
+v[c] = s2[c] - s[c] * s[c] / MAX_OBJECTS;
+gSortAxis = 0;
+if (v[1] > v[0])
+gSortAxis = 1;
+if (v[2] > v[gSortAxis])
+gSortAxis = 2;
+}
 \end{lstlisting}
 
 \subsection{Algoritmos de Fase Estreita}
@@ -455,18 +452,21 @@ Segundo: Calcular a distância entre o ponto mais próximo e o centro da esfera.
 Caso a distância seja menor que o raio da esfera, então existe uma colisão.
 
 \begin{lstlisting}[frame=single,caption=Colisão entre esfera e caixa\label{code:collisionSphereBox}]
-bool spherebox(sphere3d* s, box3d* b)
+bool spherebox(sphere3d *s, box3d *b)
 {
 vector3d closestPoint;
-                       for (int i = 0; i < 3; i++) {
-                             float v = s->center[i];
-                             if (v < b->min[i]) v = b->min[i];
-                             if (v > b->max[i]) v = b->max[i];
-                             closestPoint[i] = v;
-                       }
-float sqdist=((closestPoint-s->center)*(closestPoint-s->center));
-float sqradius=(s->radius*s->radius);
-if(sqdist<=sqradius)
+for (int i = 0; i < 3; i++)
+{
+float v = s->center[i];
+if (v < b->min[i])
+v = b->min[i];
+if (v > b->max[i])
+v = b->max[i];
+closestPoint[i] = v;
+}
+float sqdist = ((closestPoint - s->center) * (closestPoint - s->center));
+float sqradius = (s->radius * s->radius);
+if (sqdist <= sqradius)
 {
 return true;
 }
@@ -482,8 +482,9 @@ Se o objetivo for determinar  se os objetos colidem, os testes demonstrados são
 suficientes. No entanto, se o objetivo for resolver a colisão informações adicionais devem
 ser coletadas durante o processo de detecção de colisão. O processo de coleta
 de informações é um problema difícil segundo \citeonline{ericson2004real}.
-Quais informações coletar depende muito dos objetivos do sistema. Porém, três
-informações são fundamentais:
+Quais informações coletar depende muito dos objetivos do sistema.
+
+Porém, três informações são fundamentais:
 Ponto de contato: Retorna um ou mais pontos de contato indicando onde os objetos colidiram.
 Normal da colisão: Este é um vetor unitário apontando a direção em que os objetos devem ser movidos para que eles parem de colidir.
 Profundidade de penetração: É o quanto os objetos estão se sobrepondo. Esta
@@ -504,7 +505,6 @@ correção das posições dos objetos torna-se necessária.
 
 Em simulações mais avançadas, como simulações de física, outros métodos podem
 ser utilizados como a resolução de colisão por impulso.
-
 Neste método, características físicas dos objetos são levados em consideração
 para que os objetos reajam de forma adequada e mais natural.
 
@@ -521,7 +521,8 @@ O exemplo de código a seguir exemplifica este processo...
 
 
 \begin{lstlisting}[frame=single,caption=Exemplo de resolução de colisão\label{code:solveCollision}]
-void solveCollision(object* b1, object* b2, vector3d contactPoint, vector3d normal, vector3d depth)
+void solveCollision(object* b1, object* b2, vector3d contactPoint,
+ vector3d normal, vector3d depth)
 {
 if(b1->mass<=0.0f)
 {
@@ -542,45 +543,39 @@ else
 }
 \end{lstlisting}
 
-Este é apenas um exemplo básico e simplificado. Em simulações complexas muitos
-Outros atributos devem ser levados em consideração como tensores de inércia,
-velocidade tangencial, velocidades angulares e torques.
-
-Em \citeonline{bourg2013physics} explicações mais detalhadas podem ser encontradas bem como algoritmos e
-métodos mais sofisticados.
-
-
-
+Segundo \citeonline{bourg2013physics} este é apenas um exemplo básico e simplificado. Em simulações complexas muitos Outros atributos devem ser levados em consideração como tensores de inércia, velocidade tangencial, velocidade angular e torque.
 
 \section{Metodologia}
 
 A  proposta de desenvolvimento deste projeto é um programa gráfico que
 executará simulações de movimento em ambientes 3d, para analisar os mecanismos de detecção de colisão.
-Este programa será implementado com algumas leis básicas da física, para que os objetos simulados reajam de forma mais realista,  tornando assim, a simulação mais dinâmica.
-O usuário terá a opção de definir as variáveis de seu ambiente de simulação, como limites espaciais cujo os objetos podem percorrer, definir obstáculos, aplicar a força da gravidade,
-definir o passo de tempo da simulação, bem como configurar individualmente cada
-objeto presente na mesma.
-Os objetos simulados terão os seguintes parâmetros configuráveis: massa,
-posição, velocidade, coeficiente de restituição e forma. Os parâmetros serão configuráveis por meio de um painel.
-O programa será organizado em 3 partes principais:
-Tela principal:
-Será onde a simulação será desenhada, mostrando ao usuário o andamento da simulação.
-A tela principal também terá um menu permitindo o controle de diversos aspectos da simulação.
-Configuração do ambiente:
-Esta tela será responsável por configurar o ambiente de simulação. Propriedades
-como limites do ambiente, passo de tempo, e se a gravidade deve ou não ser
-aplicada são exemplos de propriedades configuráveis.
-Também nesta tela, terá a lista de objetos que poderão ser controlados.
-Engine de simulação:
-Esta parte do programa será subdividida em simulação do movimento e detecção de colisão.
-Simulação do movimento:
-Esta etapa é responsável pelos cálculos que modelam o movimento dos objetos presentes no ambiente da simulação, utilizando para isto as leis de Newton.
-No entanto, a  única restrição existente é que os objetos estáticos não devem ser movimentados. Pois, eles modelam obstáculos ou a geografia do ambiente.
-Detecção de colisão:
-A detecção de colisão é a etapa responsável por aplicar algoritmos específicos nos objetos a fim de determinar se existe uma sobreposição, ou se  a distância entre 2 objetos é inferior a uma determinada tolerância.
-Esta etapa também é responsável por resolver a colisão caso exista.
-Modelagem preliminar do simulador:
 
+\subsubsection{Recursos preliminares do Simulador}
+O simulador desenvolvido deverá implementar algumas leis básicas da física, para que os objetos simulados reajam de forma mais realista, tornando assim, a simulação mais dinâmica. 
+
+O programa será organizado em 3 partes principais: 
+Tela principal: Será onde a simulação será desenhada, mostrando ao usuário o andamento da simulação. A tela principal também terá um menu permitindo o controle de diversos aspectos da simulação. 
+Configuração do ambiente: Esta tela será responsável por configurar o ambiente de simulação. Propriedades como limites do ambiente, passo de tempo, e se a gravidade deve ou não ser aplicada são exemplos de propriedades configuráveis. Também nesta tela, terá a lista de objetos que poderão ser controlados.
+Engine de simulação: Esta parte do programa será subdividida em simulação do movimento e detecção de colisão. 
+Simulação do movimento: Esta etapa é responsável pelos cálculos que modelam o movimento dos objetos presentes no ambiente da simulação, utilizando para isto as leis de Newton. No entanto, a única restrição existente é que os objetos estáticos, que representam obstáculos ou a geografia do espaço, não devem ser movimentados.
+
+Detecção de colisão: A detecção de colisão é a etapa responsável por aplicar algoritmos específicos nos objetos a fim de determinar se existe uma sobreposição, ou se a distância entre 2 objetos é inferior a uma determinada tolerância. Esta etapa também é responsável por resolver a colisão caso exista. 
+
+No simulador, o usuário terá a opção de definir as seguintes variáveis de simulação:
+limites espaciais cujo os objetos podem percorrer; 
+definir obstáculos; 
+aplicar a força da gravidade; 
+definir o passo de tempo da simulação; 
+Os objetos simulados poderão, por meio de um painel, ter os seguintes parâmetros configuráveis: 
+\begin{itemize}
+\item massa; 
+\item posição;
+\item velocidade;
+\item coeficiente de restituição;
+\item forma. 
+\end{itemize}
+
+\subsubsection{Modelagem preliminar do simulador}
 Nesta cessão, a modelagem preliminar da engine de simulação será discutida apresentando seus principais componentes.
 
 \begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
@@ -806,54 +801,79 @@ O método de atualização será chamado sempre que um passo na simulação for 
 Ele primeiramente movimentará os objetos, e então fará a fase ampla, fase
 estreita, e resolverá as colisões...
 
-Requisitos do Projeto
+\subsubsection{Requisitos do Projeto}
 
-Compilador compatível com c++20 ou superior;
-Compilador compatível com C2017 ou posterior;
-wxwidgets para a criação das telas e controles como listas, botões e demais controles…
-opengl para a renderização gráfica;
-wxglade para construir a interface gráfica do usuário (GUI)
-fmod e bass para indicações sonoras;
+A listagem a seguir apresenta os recursos previstos para o desenvolvimento do projeto.
+Todos os  recursos são  de código aberto, ou possuem licenças de uso não comercial.
+
+\begin{itemize}
+\item Compilador compatível com c++20 ou superior;
+\item Compilador compatível com C2017 ou posterior;
+\item Framework wxwidgets para a criação das telas e controles como listas, botões e demais controles…
+\item Biblioteca opengl para a renderização gráfica;
+\item wxglade para construir a interface gráfica do usuário (GUI)
+\item Biblioteca fmod e bass para indicações sonoras;
+\end{itemize}
 
 \subsection{Cronograma}
-Agosto:
-primeira quinzena:
 
-Configuração do ambiente de desenvolvimento e modelagem das classes do
-simulador.
+A listagem a seguir, apresenta uma distribuição estimada das tarefas a serem
+realizadas de forma quinzenal.
 
-segunda quinzena:
-Revisão e testes das classes desenvolvidas
-Registros e documentação parcial para composição do artigo final
-
-Setembro
-primeira quinzena:
-
-Desenvolvimento da janela principal do aplicativo e seus diálogos.
-
-segunda quinzena:
-Desenvolvimento da animação gráfica dos objetos
-Registro sobre o andamento do projeto para a composição do artigo final
-
-Outubro
-primeira quinzena
-Refinamento de todo o projeto desenvolvido e realizar a integração dos componentes.
-
-segunda quinzena
-Finalização do protótipo para testes e correções de bugs
-Registro do progresso para a composição do artigo final
-
-Novembro
-Primeira quinzena:
-
-Testes do protótipo
-Escrita do artigo final
-
-Segunda quinzena:
-
-Término do artigo final
-Dezembro
-primeira quinzena:
-Finalização e entrega do artigo final
-Defesa do Trabalho de conclusão de curso
-
+\begin{enumerate}
+\item Agosto:
+\begin{enumerate}
+\item primeira quinzena:
+\begin{enumerate}
+\item Configuração do ambiente de desenvolvimento e modelagem das classes do simulador.
+\end{enumerate}
+\item segunda quinzena:
+\begin{enumerate}
+\item Revisão e testes das classes desenvolvidas
+\item Registros e documentação parcial para composição do artigo final
+\end{enumerate}
+\end{enumerate}
+\item Setembro
+\begin{enumerate}
+\item primeira quinzena:
+\begin{enumerate}
+\item Desenvolvimento da janela principal do aplicativo e seus diálogos.
+\end{enumerate}
+\item segunda quinzena:
+\begin{enumerate}
+\item Desenvolvimento da animação gráfica dos objetos
+\item Registro sobre o andamento do projeto para a composição do artigo final
+\end{enumerate}
+\end{enumerate}
+\item Outubro
+\begin{enumerate}
+\item primeira quinzena
+\begin{enumerate}
+\item Refinamento de todo o projeto desenvolvido e realizar a integração dos componentes.
+\end{enumerate}
+\item segunda quinzena
+\begin{enumerate}
+\item Finalização do protótipo para testes e correções de bugs
+\item Registro do progresso para a composição do artigo final
+\end{enumerate}
+\end{enumerate}
+\item Novembro
+\begin{enumerate}
+\item Primeira quinzena:
+\begin{enumerate}
+\item Testes do protótipo
+\item Escrita do artigo final
+\end{enumerate}
+\item Segunda quinzena:
+\begin{enumerate}
+\item Término do artigo final
+\end{enumerate}
+\end{enumerate}
+\item Dezembro
+\begin{enumerate}
+\item primeira quinzena:
+\begin{enumerate}
+\item Finalização e entrega do artigo final
+\item Defesa do Trabalho de conclusão de curso
+\end{enumerate}
+\end{enumerate}
