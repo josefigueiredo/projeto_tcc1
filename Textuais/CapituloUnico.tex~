@@ -360,13 +360,19 @@ seja capaz de conter todo o volume do objeto. Com esta compartimentação
 espacial, os objetos só precisam verificar a possibilidade de colisão com seus
 irmãos, e com os nós mais profundos acelerando assim o processo.
 
-\begin{figure}[htb]
-	\caption{\label{fig:figura1} Legenda da figura}
-	\includegraphics[width=\textwidth]{Imagens/Figura_7.11.png}
-	\legend{Fonte: \cite{bourg2013physics}. }
-\end{figure}
+%\begin{figure}[htb]
+%	\caption{\label{fig:figura1} Legenda da figura}
+%	\includegraphics[width=\textwidth]{Imagens/figura1.png}
+%	\legend{Fonte: \cite{bourg2013physics}. }
+%\end{figure}
 
-Descrição da Figura~\ref{fig:figura1}:
+%\begin{figure}[htb]
+%	\caption{\label{fig:figura1} Legenda da figura}
+%	\includegraphics[width=\textwidth]{Imagens/Figura_7.11.png
+%	\legend{Fonte: \cite{bourg2013physics}. }
+%\end{figure}
+
+%Descrição da figura ~\ref{fig:figura1}:
 A imagem mostra um quadrado com 15 objetos no interior. Os objetos têm forma de circunferência e não há nenhuma colisão entre eles. O quadrado maior (representa o primeiro nível) é então dividido ao meio (na vertical e na horizontal), formando agora 4 subquadrados (representam o segundo nível). Na imagem, esta divisão é feita por linha de pontinhos. A seguir uma nova divisão ocorre e cada subquadrado é dividido novamente (na vertical e na horizontal) em 4 novos subquadrados (representam o terceiro nível). Na imagem, esta divisão é feita por linhas tracejadas. Ao final das divisões, cada quadrado foi dividido em 4 subquadrados (formando na imagem 8 subquadrados)
 
 Os objetos dentro do cubo inicial são agora classificados em função de sua posição estão nesta divisão. Se foram “cortados” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
@@ -616,5 +622,312 @@ velocidade tangencial, velocidades angulares e torques.
 
 Em \citeonline{bourg2013physics} explicações mais detalhadas podem ser encontradas bem como algoritmos e
 métodos mais sofisticados.
+
+
+\section{Metodologia}
+
+A  proposta de desenvolvimento deste projeto é um programa gráfico que
+executará simulações de movimento em ambientes 3d, para analisar os mecanismos de detecção de colisão.
+Este programa será implementado com algumas leis básicas da física, para que os objetos simulados reajam de forma mais realista,  tornando assim, a simulação mais dinâmica.
+O usuário terá a opção de definir as variáveis de seu ambiente de simulação, como limites espaciais cujo os objetos podem percorrer, definir obstáculos, aplicar a força da gravidade,
+definir o passo de tempo da simulação, bem como configurar individualmente cada
+objeto presente na mesma.
+Os objetos simulados terão os seguintes parâmetros configuráveis: massa,
+posição, velocidade, coeficiente de restituição e forma. Os parâmetros serão configuráveis por meio de um painel.
+O programa será organizado em 3 partes principais:
+Tela principal:
+Será onde a simulação será desenhada, mostrando ao usuário o andamento da simulação.
+A tela principal também terá um menu permitindo o controle de diversos aspectos da simulação.
+Configuração do ambiente:
+Esta tela será responsável por configurar o ambiente de simulação. Propriedades
+como limites do ambiente, passo de tempo, e se a gravidade deve ou não ser
+aplicada são exemplos de propriedades configuráveis.
+Também nesta tela, terá a lista de objetos que poderão ser controlados.
+Engine de simulação:
+Esta parte do programa será subdividida em simulação do movimento e detecção de colisão.
+Simulação do movimento:
+Esta etapa é responsável pelos cálculos que modelam o movimento dos objetos presentes no ambiente da simulação, utilizando para isto as leis de Newton.
+No entanto, a  única restrição existente é que os objetos estáticos não devem ser movimentados. Pois, eles modelam obstáculos ou a geografia do ambiente.
+Detecção de colisão:
+A detecção de colisão é a etapa responsável por aplicar algoritmos específicos nos objetos a fim de determinar se existe uma sobreposição, ou se  a distância entre 2 objetos é inferior a uma determinada tolerância.
+Esta etapa também é responsável por resolver a colisão caso exista.
+Modelagem preliminar do simulador:
+
+Nesta cessão, a modelagem preliminar da engine de simulação será discutida apresentando seus principais componentes.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe vetor3d
+{
+eixo_x
+eixo_y
+eixo_z
+magnitude()
+normalizar()
+inverso()
+produto_escalar()
+produto_vetorial()
+produto_triplo_escalar()
+};
+\end{lstlisting}
+
+A classe vetor3d representará as coordenadas cartesianas tridimensionais no espaço.
+Existem três componentes fundamentais:
+%eixo_X: Representa a distância do ponto em relação a uma origem de referência horizontalmente.
+%eixo_y: Representa verticalmente a distância do ponto até a origem.
+%eixo_z: É o eixo perpendicular ao eixo x e eixo y. Utilizado para dar profundidade.
+
+O vetor também tem diversas operações associadas como soma, subtração,
+multiplicação e divisão. Também possui métodos específicos como normalização,
+magnitude, inverso e seus produtos como produto vetorial e escalar.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe FormaGeometrica
+{
+tipo
+recuperar_centroide()
+calcular_suporte()
+transladar(vetor v)
+escalar(s)
+rotacionar(orientação)
+converter_string()
+};
+\end{lstlisting}
+
+A classe de forma geométrica é uma base para as próximas implementações de
+esferas e caixas.
+Ela declara padrões que devem ser seguidos pelas classes filhas.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe esfera estende FormaGeometrica
+{
+ponto_central
+raio
+};
+\end{lstlisting}
+
+
+A classe esfera tem 2 atributos principais que são:
+Ponto_central: É um vetor que representa as coordenadas centrais da esfera.
+Raio: Representa o quanto a esfera se estende em todas as direções a partir do
+centro.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe caixa  estende FormaGeometrica
+{
+mínimo
+arestas
+};
+\end{lstlisting}
+
+A classe caixa tem duas propriedades que também são importantes:
+Mínimo: É um vetor que representa o canto inferior esquerdo da caixa.
+Arestas: É o quanto as arestas se estendem nos 3 eixos a partir do canto
+inferior esquerdo...
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe AABB
+{
+min
+max
+FormaGeometrica
+translação(vetor v)
+escala(s)
+escala(vetor v)
+computar_volume_delimitador()
+};
+\end{lstlisting}
+
+Esta classe representa uma caixa alinhada ao eixo (AABB) Ela é utilizada para
+envolver completamente uma forma geométrica, seja ela esfera, caixa ou
+poliedro.
+A classe possui 3 atributos principais:
+min: É um vetor representando o canto inferior esquerdo do aabb...
+Max: É um vetor representando o canto superior direito do aabb...
+FormaGeometrica: É a forma geométrica que o aabb está contendo...
+Também possui métodos para redimensionar e transladar o AABB.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe colisao_info
+{
+ponto_de_colisao
+normal_da_colisao
+profundidade
+objeto_1
+objeto_2
+};
+\end{lstlisting}
+
+A classe CollisionInfo é responsável por conter informações sobre a colisão que
+foi detectada como ponto de colisão, normal, profundidade, e os objetos
+envolvidos na colisão.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe colisao
+{
+esfera_esfera(s1, s2, info)
+esfera_caixa(s, c, info)
+caixa_caixa(c1, c2, info)
+esfera_poliedro(s, p, info)
+caixa_poliedro(c, p, info)
+poliedro_poliedro(p1, p2, info)
+};
+\end{lstlisting}
+
+A classe de colisão irá conter os métodos específicos de colisão entre as
+formas geométricas específicas como esferas x esferas, caixas x caixas e
+poliedros x poliedros.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe corpo_rigido_interface
+    {
+massa
+restituição
+nome
+aabb
+posição
+    };
+\end{lstlisting}
+
+Esta interface define alguns atributos básicos que será necessário ao modelar o
+objeto. Se precisarmos de atributos mais específicos, ou se quisermos expandir
+nossa simulação futuramente, basta sub-classificarmos esta interface e realizar
+as mudanças necessárias.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe fase_ampla
+{
+escanear(lista_de_objetos, lista_de_possiveis_colisões)
+};
+\end{lstlisting}
+
+Esta interface representa o nosso algoritmo de broadphase. Como existem
+diversos algoritmos, optou-se de criar uma interface e realizar a implementação
+separadamente.
+O método scan recebe um vetor de corpos rígidos para verificar, e também uma
+lista onde será armazenado informações sobre uma possível colisão...
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe fase_estreita
+    {
+detectar_colisões(lista_de_possiveis_colisões, lista_de_colisões)
+    };
+\end{lstlisting}
+
+Esta classe implementa o algoritmo de fase estreita da mesma forma que a interface
+de fase ampla. Este algoritmo recebe uma lista de possíveis colisões e sua
+tarefa é aplicar os testes de detecção de colisão entre geometrias específicas
+e avaliar se de fato, o par testado está colidindo.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe solucionador_de_colisão
+    {
+resolver(lista_de_colisões)
+resolver_par(objeto_1, objeto_2, info)
+    };
+\end{lstlisting}
+
+Esta classe irá resolver as colisões detectadas. Ela age separando os corpos se
+existir sobreposição, e aplicando impulso...
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe integrador_numérico
+{
+mover(lista_de_objetos, tempo)
+mover_objeto(objeto, tempo)
+};
+\end{lstlisting}
+
+ Esta classe implementa o algoritmo que fará os objetos se movimentarem na simulação. Para isso serão utilizadas equações das leis de Newton.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+classe octree
+{
+raiz
+adicionar_objeto(objeto)
+remover_objeto(objeto)
+fase_ampla(lista_de_objetos, lista_de_possíveis_colisões)
+fase_ampla(objeto, lista_de_possíveis_colisões)
+}
+
+A classe octree é utilizada na fase ampla, mas como ela é relativamente cara de
+se construir, ela é utilizada em objetos estáticos como obstáculos que representam a geografia do ambiente simulado.
+A classe tem 2 métodos de fase ampla. O primeiro, recebe uma lista de todos objetos
+que queremos que sejam testados, e a saída é uma lista com todas as colisões
+detectadas. O segundo método, recebe um objeto e uma lista de saída de colisões detectadas.
+
+\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+class ambiente_de_simulação estende AABB
+{
+tempo_atual
+gravidade
+lista_de_objetos
+fase_ampla
+fase_estreita
+solucionador_de_colisões
+integrador_numérico
+octree
+adicionar_objeto(objeto)
+remover_objeto(objeto)
+passo_de_simulação(tempo)
+};
+\end{lstlisting}
+
+Esta classe é responsável pela simulação do ambiente. Para isso recebe e manipula todos os objetos instanciados pelas classes anteriormente descritas. A classe permite adicionar e remover objetos, e também definir os algoritmos utilizados
+para realizar as tarefas.
+O método de atualização será chamado sempre que um passo na simulação for avançado.
+Ele primeiramente movimentará os objetos, e então fará a fase ampla, fase
+estreita, e resolverá as colisões...
+
+Requisitos do Projeto
+
+Compilador compatível com c++20 ou superior;
+Compilador compatível com C2017 ou posterior;
+wxwidgets para a criação das telas e controles como listas, botões e demais controles…
+opengl para a renderização gráfica;
+wxglade para construir a interface gráfica do usuário (GUI)
+fmod e bass para indicações sonoras;
+
+\subsection{Cronograma}
+Agosto:
+primeira quinzena:
+
+Configuração do ambiente de desenvolvimento e modelagem das classes do
+simulador.
+
+segunda quinzena:
+Revisão e testes das classes desenvolvidas
+Registros e documentação parcial para composição do artigo final
+
+Setembro
+primeira quinzena:
+
+Desenvolvimento da janela principal do aplicativo e seus diálogos.
+
+segunda quinzena:
+Desenvolvimento da animação gráfica dos objetos
+Registro sobre o andamento do projeto para a composição do artigo final
+
+Outubro
+primeira quinzena
+Refinamento de todo o projeto desenvolvido e realizar a integração dos componentes.
+
+segunda quinzena
+Finalização do protótipo para testes e correções de bugs
+Registro do progresso para a composição do artigo final
+
+Novembro
+Primeira quinzena:
+
+Testes do protótipo
+Escrita do artigo final
+
+Segunda quinzena:
+
+Término do artigo final
+Dezembro
+primeira quinzena:
+Finalização e entrega do artigo final
+Defesa do Trabalho de conclusão de curso
+
 
 
