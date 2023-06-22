@@ -3,11 +3,11 @@
 
 \section{Tema}
 
-Simulação Computacional
+Simulação Computacional.
 
 \subsection{Delimitação do tema}
 
-Detecção de colisão entre objetos em simulações computacionais
+Detecção de colisão entre objetos em simulações computacionais.
 
 \section{Problema}
 
@@ -16,7 +16,11 @@ Detecção de colisão entre objetos em simulações computacionais
 
 \section{Objetivos}
 
-\subsection{Objetivo Geral}
+\begin{enumerate}
+\item \subsection{Objetivo Geral}
+\end{enumerate}
+
+Explicar como funciona a detecção de colisão em simulações computacionais.
 
 \subsection{Objetivos Específicos}
 \begin{enumerate}
@@ -36,15 +40,16 @@ Por ser uma área ainda em expansão, pouco explorada e conhecida, este estudo s
 
 \section{Referencial Teórico}
 
+Nesta cessão, é apresentada o estudo teórico sobre os principais tópicos envolvendo a detecção de colisão em ambientes simulados.
 
 \subsection{Simulação Computacional}
 
 Segundo \citeonline{duran2018computer} A simulação computacional é uma técnica amplamente utilizada para o estudo de
 sistemas complexos que por diversos fatores não podem ser facilmente
-reproduzidos devido a custos elevados , ou pelo tempo necessário para que se
+reproduzidos devido a custos elevados, ou pelo tempo necessário para que se
 realize os experimentos para a obtenção de resultados precisos.
 
-A simulação,permite que um pesquisador avalie diversos cenários diferentes para sua
+A simulação permite que um pesquisador avalie diversos cenários diferentes para sua
 pesquisa apenas alterando suas variáveis de controle reduzindo a sim os custos
 e os riscos de um experimento físico. Essa técnica pode ser aplicada em
 diversas áreas como biologia, engenharia, física, química entre outras.
@@ -82,11 +87,11 @@ this->z=z;
 
 Onde x representa o eixo que vai da esquerda para a direita;
 y representa o eixo  perpendicular ao eixo x;
-E z é o eixo que indica a profundidade apontando para cima.
+e z é o eixo que indica a profundidade apontando para cima.
 
 
 Lembrando também que os vetores tem diversas operações relacionadas como soma,
-subtração, multiplicação, divisão, Comprimento ou módulo, produto escalar,
+subtração, multiplicação, divisão, comprimento ou módulo, produto escalar,
 produto cruzado e produto triplo escalar que são relevantes para este estudo.
 
 \subsubsection{Esferas}
@@ -95,6 +100,7 @@ As esferas são simples de representar computacionalmente, e também
 incrivelmente fáceis de se computar. Para representarmos uma esfera, tudo o que
 precisamos é de um ponto que representará o centro da esfera, e um raio, que
 indica o quanto a esfera se estende em todas as direções a partir do centro.
+Em \citeonline{ericson2004real} é possível encontrar uma implementação geral de esferas, e em \citeonline{bourg2013physics} é possível perceber na prática como usar uma bouding sphere.
 
 \begin{lstlisting}[frame=single,caption=Representação de esfera\label{code:sphere3d}]
 class sphere3d {
@@ -111,7 +117,7 @@ this->radius=radius;
 sphere3d s({0.0f, 0.0f, 0.0f}, 5.0f);
 \end{lstlisting}
 
-A sim temos uma esfera cujo o centro está posicionado exatamente na origem de
+Desta forma, temos uma esfera cujo o centro está posicionado exatamente na origem de
 nosso sistema cartesiano, e que se estende por um raio de 5 em todas as
 direções.
 
@@ -119,15 +125,14 @@ direções.
 
 As caixas são trivialmente representáveis de diversas formas. Com elas podemos
 representar formas cuboides facilmente. Ela normalmente é representada por dois
-vetores, onde um indica o canto inferior esquerdo, e o outro o canto superior
-direito. No livro Real Time Collision Detection, Christer Ericson demonstra
-várias maneiras de se representar AABBS, que nada mais são que caixas.
+vetores, onde um indica o canto inferior esquerdo, e o outro o canto superior direito.
+
 Outras formas populares de se representar caixas são:
 Ponto central mais meias larguras que se estenderão do centro até as bordas da caixa.
-Ou a forma que usaremos que consiste em um ponto mínimo e um vetor
-representando a largura, altura e comprimento da caixa respectivamente.
+Ponto inferior esquerdo, e a extensão de suas arestas no eixo x, y e z.
 A seguir as três formas descritas são representadas. Ambas fornecem vantagens e
 desvantagens dependendo do contexto em que forem utilizadas.
+Em \citeonline{ericson2004real} é possível encontrar uma explicação mais detalhada de como estas representações funcionam.
 
 Caixa representada pelo ponto mínimo e máximo:
 
@@ -185,7 +190,7 @@ Todas as 3 representações terão seus limites entre 10 e 20.
 
 Os poliedros nada mais são que uma nuvem de pontos que representam uma
 geometria específica. Os poliedros certamente são a maneira mais precisa de
-representar geometria, porém eles são uma faca de dois gumes. Quanto mais
+representar geometria, porém eles apresentam uma dualidade significativa. Quanto mais
 detalhado o poliedro, mais caro será para computar colisões, rotações e
 translações. Existem dois tipos de poliedros. Poliedros convexos e poliedros
 côncavos. Poliedros convexos são poliedros que são coplanares ou que possuem
@@ -196,6 +201,7 @@ sofisticados para operarem sobre nuvens de pontos para detectar colisões.
 Alguns dos algoritmos mais famosos para isto incluem o
 GJK(Gilbert Johnson Keerthi), ou o Teorema dos eixos separadores, na sigla em
 inglês (SAT).
+
 
 \subsection{ Estruturas para delimitação de volumes}
 Em uma simulação,temos os mais variados objetos interagindo uns com os outros.
