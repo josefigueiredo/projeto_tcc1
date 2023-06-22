@@ -201,42 +201,14 @@ sofisticados para operarem sobre nuvens de pontos para detectar colisões.
 Em \citeonline{ericson2004real} é discutido com mais detalhes poliedros e seus algoritmos específicos.
 
 \subsection{ Estruturas para delimitação de volumes}
-Em uma simulação,temos os mais variados objetos interagindo uns com os outros.
-Como por exemplo, uma esfera colidindo contra um triângulo representado de
-forma poligonal. Na simulação, teremos diversos objetos e precisamos testar a
-colisão entre um dos objetos contra todos os outros com seus algoritmos e
-métodos específicos, o que pode ser computacionalmente caro e custoso.
 
-É para resolver esse problema de executar algoritmos caros a todo instante que
-surgiram os volumes delimitadores. É escolhida uma forma arbitrária para
-representar um volume delimitador para encapsular a geometria específica.
+Em uma simulação computacional existem diversos objetos e o ambiente precisa testar se alguma colisão ocorreu. Este monitoramento constante acaba tendo um alto custo computacional. Para otimizar esse processo, os simuladores utilizam estruturas chamadas delimitadores de volume, que fazem um encapsulamento da geometria em avaliação.
 
-Existem vários tipos de volume delimitadores como esferas, retângulos, e cascas
-convexas. Todas elas tem suas desvantagens e vantagens como por exemplo, um
-volume delimitador como uma esfera é extremamente simples e rápido de se
-calcular, porém, ela é autamente imprecisa para detectar colisões gerando
-diversos falsos positivos.
+Existem vários tipos de estruturas delimitadoras de volumes, como esferas, retângulos, e cascas convexas. Devido a simplicidade de implementação, neste trabalho optou-se pela estrutura retangular. As estruturas delimitadoras de volume poderão ser implementadas de duas formas básicas, que são: Aligned Axis Bounding Box (AABB) e Oriented Bounding Box (OBB).
 
-A forma mais precisa é uma casca convexa, porém, ela é cara de se computar.
-Então um retângulo fornece um bom equilíbrio entre precisão e velocidade sendo
-a sim, a forma preferida de volume delimitador.
+A estrutura AABB, que pode ser implementada como apresentado no código ~\ref{code:aabb_1}, é uma caixa retangular alinhada aos três eixos do sistema de coordenadas e não pode sofrer rotações. Caso uma rotação aconteça, o delimitador precisa ser reconstruído, implicando em maior custo computacional. No entanto, segundo \citeonline{ericson2004real}, a verificação de colisão é relativamente mais simples de computar.
 
-Depois de escolhida a forma do volume delimitador que aqui foi escolhida o
-retângulo, surge outro problema. Que tipo de volume delimitador queremos? Um
-AABB, ou um OBB? Novamente, ambos tem suas vantagens e desvantagens que são
-explicadas a seguir:
-
-\subsubsection{AABB}
-Aligned Axis Bounding Box é uma caixa retangular alinhada aos três eixos do
-sistema de coordenadas, por tanto, ela não pode sofrer rotações. Então, caso a
-geometria contida por este volume delimitador sofra uma rotação, o volume
-delimitador deve ser reconstruído para acomodar a geometria rotacionada. Isso
-pode ser especialmente custoso de se computar em poliedros com muitos vértices.
-
-No entanto, a vantagem é que o teste de colisão é eficiente e relativamente
-simples de se computar.
-
-\begin{lstlisting}[frame=single,caption=Exemplo de AABB\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de AABB\label{code:aabb_1}]
 class AABB
 {
 public:
@@ -244,38 +216,20 @@ vector3d min;
 vector3d max;
 GeometricShape* shape;
 };
+\end{lstlisting}
 
+\begin{lstlisting}[frame=single,caption=Exemplo de AABB e Esfera\label{code:aabbSphere}]
 sphere3d* s=new sphere3d({5, 5, 5}, 5);
 AABB* aabb=new AABB(s);
 \end{lstlisting}
 
-A bounding box desta esfera será 2 vetores que envolverão completamente em um cubo.
-Seus vetores respectivamente serão:
-min={0,0,0}
-max={10,10,10}
 
+No código apresentado em \ref{code:aabbSphere}, a bounding box desta esfera será 2 vetores encapsulando completamente em um cubo. Seus vetores respectivamente serão: min=0,0,0 max=10,10,10
 
-\subsubsection{OBB}
-
-Um Oriented Bounding box tem a mesma função de um AABB, porém, ele não está
-preso a nenhum eixo e é invariável a rotação dos objetos pois ele também é
-capaz de rotacionar acompanhando a rotação do objeto contido. Ele é
-representado de forma diferente de um aabb com um ponto central, as meia
-medidas para os eixos, e uma matriz de rotação para servir como orientação do
-obb. É possível representar a matriz de rotação como ângulos de Euler para
-economizar memória, porém, mais tarde ao atualizar a rotação, terá que
-converter os ângulos em uma matriz. Como Christer Ericson comenta em seu livro,
-Obbs e conversões de ângulos é surpreendentemente caro e complicado.
-
-Como tudo na computação tem seus prós e contras, obbs são geralmente mais
-precisos que AABBS, porém, são mais caros de se computar, e também mais
-difíceis de se implementar.
-
-
-Algumas representações típicas de obbs se seguem:
+Já a estrutura OBB não está presa a nenhum eixo, facilitando a rotação dos objetos contidos nela. A estrutura OBB, apresentada no código ~\ref{code:obb_1},  é representada por um ponto central, com meias medidas para os eixos e uma matriz de rotação. Segundo Ericson a estrutura OBBS é computacionalmente custosa e de difícil implementação.
 
 \begin{lstlisting}[frame=single,caption=Código de exemplo de OBB\label{code:obb_1}]
-class obb_1
+class obb
 {
 public:
 vector3d center;
@@ -284,21 +238,7 @@ matrix3x3 orientation;
 };
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single,caption=Exemplo de OBB\label{code:obb_2}]
-class obb_2
-{
-public:
-vector3d center;
-vector3d measures;
-vector3d angles;
-};
-\end{lstlisting}
-
-Para realizar um teste de sobreposição obb obb é necessário utilizar o teorema
-dos eixos separadores que diz que se existir ao menos um plano que divida os
-dois objetos, eles não estão colidindo.
-
-
+Neste trabalho optou-se pela utilização da estrutura AABB, devido à relativa facilidade de implementação em relação a estrutura OBB
 
 \subsubsection{ Corpo Rígido}
 \subsubsection{ O que é um corpo rígido?}
