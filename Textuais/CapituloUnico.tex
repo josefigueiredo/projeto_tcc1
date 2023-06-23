@@ -306,9 +306,10 @@ nó que será dividido atingiu um limite mínimo.
 Os objetos indexados pela estrutura serão adicionados no menor nó que seja capaz de conter todo o volume do objeto.
 Com esta compartimentação espacial, os objetos só precisam verificar a possibilidade de colisão com seus irmãos, e com os nós mais profundos acelerando assim o processo.
 
+A figura~\ref{fig:figura1} mostra a representação de uma árvore octree e seus filhos.
 \begin{figure}[htb]
   \centering
-	\caption{\label{fig:figura1} Legenda da figura}
+	\caption{\label{fig:figura1} Figura mostrando a representação de uma octree}
 	\includegraphics[scale=0.5]{Imagens/Figura_7.10.png} %width=\textwidth
 	\legend{Fonte: \cite{ericson2004real}. }
 \end{figure}
@@ -316,9 +317,10 @@ Com esta compartimentação espacial, os objetos só precisam verificar a possib
 \noindent\footnotesize Descrição da Imagem: A figura~\ref{fig:figura1} representa um cubo, tridimensional, em perspectiva (de forma que vemos três faces e um canto). Este cubo (que representa um nó na estrutura octree) é dividido em 8 subcubos - com $1/8$ vezes o tamanho do cubo maior. Em outras palavras, o cubo é dividido na metade nos eixos x,y e z.
 \noindent\footnotesize Na imagem vemos 7 subcubos numerados de 0 até 8. Na parte inferior estão os cubos 0 (que não é visível por estar escondido atrás dos outros nessa perspectiva); Vindo da direita para esquerda estão os cubos 1,5 e 4. Na parte superior estão os cubos 3,7,6 e 2. O cubo 2 está sobre o cubo 0; o cubo 3 está sobre o cubo 1; o cubo 7 está sobre o cubo 7 e, por fim, o cubo 6 está sobre o cubo 4.
 
+A figura~\ref{fig:figura2} mostra uma árvore quadtree, que é a versão bidimensional de uma árvore octree. Nesta figura é ilustrado como os objetos adicionados ficam indexados nos nós.
 \begin{figure}[htb]
   \centering
-	\caption{\label{fig:figura2} Legenda da figura}
+	\caption{\label{fig:figura2} Figura ilustrando uma árvore octree acomodando objetos}
 	\includegraphics[scale=0.5]{Imagens/Figura_7.11.png} %width=\textwidth
 	\legend{Fonte: \cite{ericson2004real}. }
 \end{figure}
@@ -379,9 +381,10 @@ gSortAxis = 2;
 }
 \end{lstlisting}
 
+A figura~\ref{fig:figura3} ilustra um grupo de objetos antes de passar pela fase ampla, e os objetos após a passagem pela fase ampla.
 \begin{figure}[htb]
   \centering
-	\caption{\label{fig:figura3} Legenda da figura}
+	\caption{\label{fig:figura3} Ilustração de objetos antes e depois de passarem pela fase ampla}
 	\includegraphics[scale=0.5]{Imagens/Figura_2.4.png} %width=\textwidth
 	\legend{Fonte: \cite{ericson2004real}. }
 \end{figure}
@@ -569,8 +572,8 @@ Na tela do simulador, o usuário terá a opção de definir alguns parâmetros d
 \begin{itemize}
   \item Limites espaciais: definem o espaço que os objetos podem percorrer;
   \item Definição de obstáculos: inserir/remover obstáculos fixos no espaço da simulação;
-  \item Gravidade: Aplicar força gravitacional na simulção;
-  \item Controle de tempo: Definir o passo da simulação;   
+  \item Gravidade: Aplicar força gravitacional na simulação;
+  \item Controle de tempo: Definir o passo de tempo da simulação;   
 \end{itemize}
  
 Os objetos simulados poderão, por meio de um painel, ter os seguintes parâmetros configuráveis: 
