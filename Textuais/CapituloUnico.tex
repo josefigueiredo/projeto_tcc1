@@ -65,7 +65,7 @@ geometria. A forma usada dependerá  do nível de detalhamento desejado. É poss
 
 Neste estudo será adotada a representação vetorial, devido a sua simplicidade e fácil compreensão. O trabalho será desenvolvido com 3 geometrias principais, que são: esferas, caixas e poliedros.
 
-Para representação dessas formas geométricas, são utilizados pontos de coordenadas cartesianas, definidos em uma estrutura de vetor tridimensional. O código a seguir demonstra essa estrutura.
+Para representação dessas formas geométricas, são utilizados pontos de coordenadas cartesianas, definidos em uma estrutura de vetor tridimensional. demonstrado no Código~\ref{code:vec_1}
 
 \begin{lstlisting}[frame=single,caption=Exemplo de vetor 3d\label{code:vec3d_1}]
 class vector3d{
@@ -175,7 +175,7 @@ pois é fácil de representar e de se computar.
 O Código~\ref{code:box3d_3} Lembra muito a criação de uma janela na computação gráfica. Ela tem seu
 ponto mínimo, e o comprimento de suas arestas até o ponto máximo.
 
-Os 3 exemplos abaixo criam 3 caixas exatamente com os mesmos pontos finais.
+O Código~\ref{example_box3d} cria três caixas exatamente iguais.
 
 \begin{lstlisting}[frame=single,caption=Código de exemplo de criação de 3 caixas\label{example_box3d}]
 box3d_1 b1({10,10,10}, {20,20,20});
@@ -243,7 +243,7 @@ matrix3x3 orientation;
 Neste trabalho optou-se pela utilização da estrutura AABB, devido à relativa facilidade de implementação em relação a estrutura OBB
 
 \subsubsection{Corpo Rígido}
-Segundo Bourg e Bywalec (2013, tradução nossa) Um corpo rígido é um conjunto de partículas  que permanecem a distâncias fixas umas das outras  sem nenhum tipo de translação ou rotação entre elas. Em outras palavras,  um corpo rígido não mudará de forma enquanto se move, ou sua deformação é tão insignificante que pode ser desprezada.
+Segundo \citeonline{bourg2013physics} Um corpo rígido é um conjunto de partículas  que permanecem a distâncias fixas umas das outras  sem nenhum tipo de translação ou rotação entre elas. Em outras palavras,  um corpo rígido não mudará de forma enquanto se move, ou sua deformação é tão insignificante que pode ser desprezada.
 
 Um corpo rígido é  frequentemente representado como tendo uma posição, uma orientação  e  dimensões para representar seu volume. Estes são requisitos mínimos para a  sua definição, porém, dependendo do nível de precisão desejada, pode-se adicionar mais atributos como tensores de inércia, velocidades lineares e angulares, coeficiente de restituição, e o que mais for necessário para que se atinja os objetivos desejados.
 
@@ -517,8 +517,7 @@ deve atuar apenas no objeto dinâmico.
 Caso os dois objetos sejam dinâmicos, a resolução deve atuar sobre os dois
 objetos em direções opostas.
 
-O exemplo de código a seguir exemplifica este processo...
-
+O Código~\ref{code:solveCollision} exemplifica este processo.
 
 \begin{lstlisting}[frame=single,caption=Exemplo de resolução de colisão\label{code:solveCollision}]
 void solveCollision(object* b1, object* b2, vector3d contactPoint,
@@ -578,7 +577,7 @@ Os objetos simulados poderão, por meio de um painel, ter os seguintes parâmetr
 \subsubsection{Modelagem preliminar do simulador}
 Nesta cessão, a modelagem preliminar da engine de simulação será discutida apresentando seus principais componentes.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de vetor3d\label{ps:vec3d}]
 classe vetor3d
 {
 eixo_x
@@ -593,17 +592,17 @@ produto_triplo_escalar()
 };
 \end{lstlisting}
 
-A classe vetor3d representará as coordenadas cartesianas tridimensionais no espaço.
+A classe descrita no Código~\ref{ps:vec3d} representará as coordenadas cartesianas tridimensionais no espaço.
 Existem três componentes fundamentais:
 eixo_X: Representa a distância do ponto em relação a uma origem de referência horizontalmente.
 eixo_y: Representa verticalmente a distância do ponto até a origem.
 eixo_z: É o eixo perpendicular ao eixo x e eixo y. Utilizado para dar profundidade.
 
-O vetor também tem diversas operações associadas como soma, subtração,
+O Código~\ref{ps:vec3d} também tem diversas operações associadas como soma, subtração,
 multiplicação e divisão. Também possui métodos específicos como normalização,
 magnitude, inverso e seus produtos como produto vetorial e escalar.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de interface de forma geométrica\label{ps:geometricshape}]
 classe FormaGeometrica
 {
 tipo
@@ -616,11 +615,11 @@ converter_string()
 };
 \end{lstlisting}
 
-A classe de forma geométrica é uma base para as próximas implementações de
+A classe de forma geométrica apresentada no Código~\{ps:geometricshape}]} é uma base para as próximas implementações de
 esferas e caixas.
 Ela declara padrões que devem ser seguidos pelas classes filhas.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de esfera 3d\label{ps:sphere3d}]
 classe esfera estende FormaGeometrica
 {
 ponto_central
@@ -628,13 +627,12 @@ raio
 };
 \end{lstlisting}
 
-
-A classe esfera tem 2 atributos principais que são:
+A classe esfera do Código~\ref{ps:sphere3d} tem 2 atributos principais que são:
 Ponto_central: É um vetor que representa as coordenadas centrais da esfera.
 Raio: Representa o quanto a esfera se estende em todas as direções a partir do
 centro.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de caixa\label{ps:box3d}]
 classe caixa  estende FormaGeometrica
 {
 mínimo
@@ -642,12 +640,12 @@ arestas
 };
 \end{lstlisting}
 
-A classe caixa tem duas propriedades que também são importantes:
+A classe caixa do Código~\ref{ps:box3d} tem duas propriedades que também são importantes:
 Mínimo: É um vetor que representa o canto inferior esquerdo da caixa.
 Arestas: É o quanto as arestas se estendem nos 3 eixos a partir do canto
 inferior esquerdo...
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de AABB\label{ps:aabb}]
 classe AABB
 {
 min
@@ -660,7 +658,7 @@ computar_volume_delimitador()
 };
 \end{lstlisting}
 
-Esta classe representa uma caixa alinhada ao eixo (AABB) Ela é utilizada para
+A classe apresentada no Código~\ref{ps:aabb}  é responsável por representar um volume delimitador para 
 envolver completamente uma forma geométrica, seja ela esfera, caixa ou
 poliedro.
 A classe possui 3 atributos principais:
@@ -669,7 +667,7 @@ Max: É um vetor representando o canto superior direito do aabb...
 FormaGeometrica: É a forma geométrica que o aabb está contendo...
 Também possui métodos para redimensionar e transladar o AABB.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de coletor de informações\label{ps:collisioninfo}]
 classe colisao_info
 {
 ponto_de_colisao
@@ -680,11 +678,11 @@ objeto_2
 };
 \end{lstlisting}
 
-A classe CollisionInfo é responsável por conter informações sobre a colisão que
+O Código~\ref{ps:collisioninfo} da classe CollisionInfo é responsável por conter informações sobre a colisão que
 foi detectada como ponto de colisão, normal, profundidade, e os objetos
 envolvidos na colisão.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de classe estática para colisões\label{ps:collision3d}]
 classe colisao
 {
 esfera_esfera(s1, s2, info)
@@ -696,11 +694,11 @@ poliedro_poliedro(p1, p2, info)
 };
 \end{lstlisting}
 
-A classe de colisão irá conter os métodos específicos de colisão entre as
+O Código~\ref{ps:collision3d} da classe de colisão irá conter os métodos específicos de colisão entre as
 formas geométricas específicas como esferas x esferas, caixas x caixas e
 poliedros x poliedros.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de interface de corpo rígido\label{ps:rigidbody}]
 classe corpo_rigido_interface
     {
 massa
@@ -711,37 +709,37 @@ posição
     };
 \end{lstlisting}
 
-Esta interface define alguns atributos básicos que será necessário ao modelar o
+A interface do Código~\ref{ps:rigidbody} define alguns atributos básicos que será necessário ao modelar o
 objeto. Se precisarmos de atributos mais específicos, ou se quisermos expandir
 nossa simulação futuramente, basta sub-classificarmos esta interface e realizar
 as mudanças necessárias.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de fase ampla\label{ps:broadphase}]
 classe fase_ampla
 {
 escanear(lista_de_objetos, lista_de_possiveis_colisões)
 };
 \end{lstlisting}
 
-Esta interface representa o nosso algoritmo de broadphase. Como existem
+A interface do Código~\ref{ps:broadphase} representa o nosso algoritmo de broadphase. Como existem
 diversos algoritmos, optou-se de criar uma interface e realizar a implementação
 separadamente.
 O método scan recebe um vetor de corpos rígidos para verificar, e também uma
 lista onde será armazenado informações sobre uma possível colisão...
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de fase estreita\label{ps:narrowphase}]
 classe fase_estreita
     {
 detectar_colisões(lista_de_possiveis_colisões, lista_de_colisões)
     };
 \end{lstlisting}
 
-Esta classe implementa o algoritmo de fase estreita da mesma forma que a interface
+Este Código~\ref{ps:narrowphase} implementa o algoritmo de fase estreita da mesma forma que a interface
 de fase ampla. Este algoritmo recebe uma lista de possíveis colisões e sua
 tarefa é aplicar os testes de detecção de colisão entre geometrias específicas
 e avaliar se de fato, o par testado está colidindo.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de solucionador de colisões\label{ps:collisionsolver}]
 classe solucionador_de_colisão
     {
 resolver(lista_de_colisões)
@@ -749,10 +747,10 @@ resolver_par(objeto_1, objeto_2, info)
     };
 \end{lstlisting}
 
-Esta classe irá resolver as colisões detectadas. Ela age separando os corpos se
+Este Código~\ref{ps:collisionsolver} irá resolver as colisões detectadas. Ele age separando os corpos se
 existir sobreposição, e aplicando impulso...
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de integrador numérico\label{ps:integrator}]
 classe integrador_numérico
 {
 mover(lista_de_objetos, tempo)
@@ -760,9 +758,9 @@ mover_objeto(objeto, tempo)
 };
 \end{lstlisting}
 
- Esta classe implementa o algoritmo que fará os objetos se movimentarem na simulação. Para isso serão utilizadas equações das leis de Newton.
+Este Código~\ref{ps:integrator} implementa o algoritmo que fará os objetos se movimentarem na simulação. Para isso serão utilizadas equações das leis de Newton.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de octree\label{ps:octree}]
 classe octree
 {
 raiz
@@ -772,13 +770,13 @@ fase_ampla(lista_de_objetos, lista_de_possíveis_colisões)
 fase_ampla(objeto, lista_de_possíveis_colisões)
 }
 
-A classe octree é utilizada na fase ampla, mas como ela é relativamente cara de
+O Código~\ref{ps:octree} da octree é utilizada na fase ampla, mas como ela é relativamente cara de
 se construir, ela é utilizada em objetos estáticos como obstáculos que representam a geografia do ambiente simulado.
 A classe tem 2 métodos de fase ampla. O primeiro, recebe uma lista de todos objetos
 que queremos que sejam testados, e a saída é uma lista com todas as colisões
 detectadas. O segundo método, recebe um objeto e uma lista de saída de colisões detectadas.
 
-\begin{lstlisting}[frame=single,caption=Código de exemplo\label{codigo1}]
+\begin{lstlisting}[frame=single,caption=Exemplo de ambiente de simulação\label{ps:world}]
 class ambiente_de_simulação estende AABB
 {
 tempo_atual
@@ -795,7 +793,7 @@ passo_de_simulação(tempo)
 };
 \end{lstlisting}
 
-Esta classe é responsável pela simulação do ambiente. Para isso recebe e manipula todos os objetos instanciados pelas classes anteriormente descritas. A classe permite adicionar e remover objetos, e também definir os algoritmos utilizados
+Este Código~\ref{ps:world} é responsável pela simulação do ambiente. Para isso recebe e manipula todos os objetos instanciados pelas classes anteriormente descritas. A classe permite adicionar e remover objetos, e também definir os algoritmos utilizados
 para realizar as tarefas.
 O método de atualização será chamado sempre que um passo na simulação for avançado.
 Ele primeiramente movimentará os objetos, e então fará a fase ampla, fase
@@ -822,58 +820,58 @@ realizadas de forma quinzenal.
 
 \begin{enumerate}
 \item Agosto:
-\begin{enumerate}
+\begin{itemize}
 \item primeira quinzena:
-\begin{enumerate}
+\begin{itemize}
 \item Configuração do ambiente de desenvolvimento e modelagem das classes do simulador.
-\end{enumerate}
+\end{itemize}
 \item segunda quinzena:
-\begin{enumerate}
+\begin{itemize}
 \item Revisão e testes das classes desenvolvidas
 \item Registros e documentação parcial para composição do artigo final
-\end{enumerate}
-\end{enumerate}
+\end{itemize}
+\end{itemize}
 \item Setembro
-\begin{enumerate}
+\begin{itemize}
 \item primeira quinzena:
-\begin{enumerate}
+\begin{itemize}
 \item Desenvolvimento da janela principal do aplicativo e seus diálogos.
-\end{enumerate}
+\end{itemize}
 \item segunda quinzena:
-\begin{enumerate}
+\begin{itemize}
 \item Desenvolvimento da animação gráfica dos objetos
 \item Registro sobre o andamento do projeto para a composição do artigo final
-\end{enumerate}
-\end{enumerate}
+\end{itemize}
+\end{itemize}
 \item Outubro
-\begin{enumerate}
+\begin{itemize}
 \item primeira quinzena
-\begin{enumerate}
+\begin{itemize}
 \item Refinamento de todo o projeto desenvolvido e realizar a integração dos componentes.
-\end{enumerate}
+\end{itemize}
 \item segunda quinzena
-\begin{enumerate}
+\begin{itemize}
 \item Finalização do protótipo para testes e correções de bugs
 \item Registro do progresso para a composição do artigo final
-\end{enumerate}
-\end{enumerate}
+\end{itemize}
+\end{itemize}
 \item Novembro
-\begin{enumerate}
+\begin{itemize}
 \item Primeira quinzena:
-\begin{enumerate}
+\begin{itemize}
 \item Testes do protótipo
 \item Escrita do artigo final
-\end{enumerate}
+\end{itemize}
 \item Segunda quinzena:
-\begin{enumerate}
+\begin{itemize}
 \item Término do artigo final
-\end{enumerate}
-\end{enumerate}
+\end{itemize}
+\end{itemize}
 \item Dezembro
-\begin{enumerate}
+\begin{itemize}
 \item primeira quinzena:
-\begin{enumerate}
+\begin{itemize}
 \item Finalização e entrega do artigo final
 \item Defesa do Trabalho de conclusão de curso
-\end{enumerate}
+\end{itemize}
 \end{enumerate}
