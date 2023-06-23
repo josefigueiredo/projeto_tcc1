@@ -130,7 +130,7 @@ Ponto inferior esquerdo, e a extensão de suas arestas no eixo x, y e z.
 As três formas fornecem vantagens e desvantagens dependendo do contexto em que forem utilizadas. Em \citeonline{ericson2004real} é possível encontrar uma explicação mais detalhada de como estas representações funcionam.
 
 
-O Código~\ref{code:box3d} apresenta as formas mais comuns para representação de caixas. A classe CaixaMinMax define uma caixa com ponto mínimo e máximo. A classe CaixaMeiaLargura define um objeto com um ponto central e o raio. Já a classe CaixaMedidasCompletas define um objetdo com as medidaas de lado completas.
+O Código~\ref{code:box3d} apresenta as formas mais comuns para representação de caixas. A classe CaixaMinMax define uma caixa com ponto mínimo e máximo. A classe CaixaMeiaLargura define um objeto com um ponto central e o raio. Já a classe CaixaMedidasCompletas define um objeto com as medidas de lado completas.
 
 \begin{lstlisting}[frame=single,caption=Representação de caixa ponto mínimo e máximo\label{code:box3d}]
 class CaixaMinMax{
@@ -138,7 +138,7 @@ class CaixaMinMax{
   vector3d max;
 };
 
-class CaixaMeiaLargura{ box3d_2{
+class CaixaMeiaLargura{
   vector3d center;
   vector3d radius;
 };
@@ -148,8 +148,6 @@ class CaixaMedidasCompletas{
   vector3d measures;
 };
 \end{lstlisting}
-
-%%% buscar por box3d_1,box3d_2, b0ox3d_3
 
 Todas elas servem para representar a mesma coisa, mas podem ser utilizadas em
 contextos diferentes dependendo o requisito. A classe CaixaMinMax é melhor aplicada para aabbs porque já tem seus limites bem definidos e pode ser usada mais facilmente para sucessivos testes. Porém tem a desvantagem de precisar fazer uma atualização extra quando precisar ser movimentada.
@@ -168,9 +166,9 @@ ponto mínimo, e o comprimento de suas arestas até o ponto máximo.
 O Código~\ref{example_box3d} cria três caixas exatamente iguais.
 
 \begin{lstlisting}[frame=single,caption=Código de exemplo de criação de 3 caixas\label{example_box3d}]
-box3d_1 b1({10,10,10}, {20,20,20});
-box3d_2 b2({15,15,15}, {5,5,5});
-box3d_3 b3({10,10,10}, {10,10,10});
+CaixaMinMax b1({10,10,10}, {20,20,20});
+CaixaMeiaLargura b2({15,15,15}, {5,5,5});
+CaixaMedidasCompletas b3({10,10,10}, {10,10,10});
 \end{lstlisting}
 
 Todas as 3 representações terão seus limites entre 10 e 20.
@@ -288,8 +286,8 @@ Caso estejam colidindo, informações como vetor normal, ponto de contato e prof
 \subsection{Algoritmos para Fase Ampla}
 Em um ambiente simulado podem existir muitos objetos, alguns próximos outros distantes. 
 Ao selecionar um objeto qualquer deste conjunto de objetos queremos saber com quais outros objetos existe a chance de colisão. 
-Em uma situação desta natureza, a complexidade dos testes normalmente é de O(n² ), onde n é o número de objetos a serem t
-estados. Apesar de ser um problema polinomial, esta complexidade ainda é muito dispendiosa, porque os objetos mais distantes espacialmente não precisariam ser testados.
+Em uma situação desta natureza, a complexidade dos testes normalmente é de O(n² ), onde n é o número de objetos a serem
+testados. Apesar de ser um problema polinomial, esta complexidade ainda é muito dispendiosa, porque os objetos mais distantes espacialmente não precisariam ser testados.
 
 Para acelerar este processo, segundo \citeonline{ericson2004real}, existem diversas estruturas de dados e técnicas de compartimentação espacial. 
 A lógica destas técnicas é agrupar os objetos que estão próximos uns dos outros e interromper a busca quando o restante dos objetos estão fora de alcance.
@@ -311,11 +309,21 @@ Com esta compartimentação espacial, os objetos só precisam verificar a possib
 \begin{figure}[htb]
   \centering
 	\caption{\label{fig:figura1} Legenda da figura}
-	\includegraphics[scale=0.5]{Imagens/Figura_7.11.png} %width=\textwidth
-	\legend{Fonte: \cite{bourg2013physics}. }
+	\includegraphics[scale=0.5]{Imagens/Figura_7.10.png} %width=\textwidth
+	\legend{Fonte: \cite{ericson2004real}. }
 \end{figure}
 
-\noindent\footnotesize Descrição da Imagem: A imagem da Figura~\ref{fig:figura1}: mostra um quadrado subdividido em quadrados menores, com 15 bolinhas distribuídas aleatóriamente, que representam objetos da simuação. Nenhuma bolinha toca outra, portanto não existe colisão entre os objetdos da simulação. O quadrado maior (1º nível no octree) é então dividido ao meio (verticalmente e horizontalmente), formando 4 subquadrados menores (2º nível no octree). Na imagem, esta divisão é representada por linhas pontilhadas. A seguir, uma nova divisão ocorre e cada subquadrado é dividido novamente (verticalmente e horizontalmente) em 4 novos subquadrados (3º nível no octree). Na imagem, esta divisão é representada por linhas tracejadas. 
+\noindent\footnotesize Descrição da Imagem: A figura~\ref{fig:figura1} representa um cubo, tridimensional, em perspectiva (de forma que vemos três faces e um canto). Este cubo (que representa um nó na estrutura octree) é dividido em 8 subcubos - com $1/8$ vezes o tamanho do cubo maior. Em outras palavras, o cubo é dividido na metade nos eixos x,y e z.
+\noindent\footnotesize Na imagem vemos 7 subcubos numerados de 0 até 8. Na parte inferior estão os cubos 0 (que não é visível por estar escondido atrás dos outros nessa perspectiva); Vindo da direita para esquerda estão os cubos 1,5 e 4. Na parte superior estão os cubos 3,7,6 e 2. O cubo 2 está sobre o cubo 0; o cubo 3 está sobre o cubo 1; o cubo 7 está sobre o cubo 7 e, por fim, o cubo 6 está sobre o cubo 4.
+
+\begin{figure}[htb]
+  \centering
+	\caption{\label{fig:figura2} Legenda da figura}
+	\includegraphics[scale=0.5]{Imagens/Figura_7.11.png} %width=\textwidth
+	\legend{Fonte: \cite{ericson2004real}. }
+\end{figure}
+
+\noindent\footnotesize Descrição da Imagem: A imagem da Figura~\ref{fig:figura2}: mostra um quadrado subdividido em quadrados menores, com 15 bolinhas distribuídas aleatoriamente, que representam objetos da simulação. Nenhuma bolinha toca outra, portanto não existe colisão entre os objetos da simulação. O quadrado maior (1º nível na quadtree) é então dividido ao meio (verticalmente e horizontalmente), formando 4 subquadrados menores (2º nível na quadtree). Na imagem, esta divisão é representada por linhas pontilhadas. A seguir, uma nova divisão ocorre e cada subquadrado é dividido novamente (verticalmente e horizontalmente) em 4 novos subquadrados (3º nível na quadtree). Na imagem, esta divisão é representada por linhas tracejadas. 
 
 \noindent\footnotesize Ao final das divisões, cada quadrado foi dividido em 4 subquadrados. As bolinhas dentro do quadrado inicial são agora classificados em função de sua posição estão nestas divisões dos quadrados. Se alguma bolinha foi “cortada” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
 
@@ -370,6 +378,21 @@ if (v[2] > v[gSortAxis])
 gSortAxis = 2;
 }
 \end{lstlisting}
+
+\begin{figure}[htb]
+  \centering
+	\caption{\label{fig:figura3} Legenda da figura}
+	\includegraphics[scale=0.5]{Imagens/Figura_2.4.png} %width=\textwidth
+	\legend{Fonte: \cite{ericson2004real}. }
+\end{figure}
+
+\noindent\footnotesize Descrição da Imagem: A figura\ref{fig:figura3} apresenta o resultado do processamento na fase ampla. A imagem tem duas partes, a parte a esquerda mostra os objetos antes do processamento da fase ampla; a parte a direita mostra os agrupamentos feitos pelo processamento da fase ampla.
+\noindent\footnotesize Antes do processamento, a imagem mostra 11 objetos retangulares dispostos de forma aleatória. Nesta distribuição é possível agrupar os elementos por proximidade, pois alguns estão mais próximos do que outros. Pode-se dizer que os objetos poderiam ser separados em 3 colunas.
+\noindent\footnotesize Na primeira coluna estão 4 objetos, destes 3 objetos que são maiores e estão em colisão enquanto 1 objeto está sozinho (bem menor) mas bem no meio. Na segunda coluna, também estão 4 objetos, destes 2 (bem na parte superior da coluna) estão em colisão. Logo abaixo estão 2 objetos separados, um mais próximo desta colisão (no meio da coluna) e outro mais distante (bem na parte inferior desta coluna). Na terceira coluna estão 3 objetos, sendo que 1 está sozinho (bem na parte superior desta coluna) e 2 estão em colisão (na parte inferior desta coluna).
+\noindent\footnotesize Na parte direita da imagem estão os mesmos blocos, na mesma distribuição, mas agora agrupados em função do processamento da fase ampla. Os agrupamentos são representados por uma área sombreada em torno dos objetos. Os 11 objetos foram agrupados em 5 subgrupos menores, destes, 3 subgrupos possuem objetos que colidem e 2 possuem objetos isolados (sozinhos). A separação ficou da seguinte forma:
+\noindent\footnotesize A primeira coluna tornou-se um subgrupo completo com os mesmos 4 objetos. Da segunda coluna, há um subgrupo com os 3 objetos superiores (2 em colisão e 1 bem próximo). O objeto mais distante (bem na parte inferior da coluna) ficou sozinho em um subgrupo.
+\noindent\footnotesize A terceira coluna gerou 2 subgrupos. O objeto que estava sozinho na parte superior ficou em um subgrupo, também sozinho. Já os objetos da parte inferior formaram um subgrupo com os dois objetos de baixo (em colisão).
+\noindent\footnotesize Após a fase ampla (que usa divisão e conquista) estes 11 objetos foram separados em 5 subgrupos. Destes 5 subgrupos, 3 possuem objetos que colidem e 2 possuem objetos isolados (sozinhos)
 
 \subsection{Algoritmos de Fase Estreita}
 
