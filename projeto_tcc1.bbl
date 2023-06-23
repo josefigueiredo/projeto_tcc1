@@ -5,6 +5,11 @@
 \providecommand{\abntbstabout}[1]{}
 \abntbstabout{v-1.9.7 }
 
+\bibitem[Baraff 1992]{baraff1992dynamic}
+\abntrefinfo{Baraff}{BARAFF}{1992}
+{BARAFF, D. \emph{Dynamic simulation of nonpenetrating rigid bodies}. [S.l.]:
+  Cornell University, 1992.}
+
 \bibitem[Bourg e Bywalec 2013]{bourg2013physics}
 \abntrefinfo{Bourg e Bywalec}{BOURG; BYWALEC}{2013}
 {BOURG, D.~M.; BYWALEC, B. \emph{Physics for Game Developers: Science, math,

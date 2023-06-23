@@ -1,4 +1,4 @@
-This is BibTeX, Version 0.99d (TeX Live 2020/Debian)
+This is BibTeX, Version 0.99d (TeX Live 2023)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: projeto_tcc1.aux
 A level-1 auxiliary file: Textuais/CapituloUnico.aux
@@ -23,44 +23,44 @@ Reallocated glb_str_end (elt_size=4) to 20 items from 10.
 | Em caso de dúvidas ou problemas com este estilo procure |
 | http://www.abntex.net.br/                               |
 +---------------------------------------------------------+
-You've used 7 entries,
+You've used 8 entries,
             6714 wiz_defined-function locations,
-            1228 strings with 10046 characters,
-and the built_in function-call counts, 5329 in all, are:
-= -- 526
-> -- 161
+            1233 strings with 10147 characters,
+and the built_in function-call counts, 5953 in all, are:
+= -- 571
+> -- 176
 < -- 2
-+ -- 104
-- -- 50
-* -- 332
-:= -- 773
-add.period$ -- 19
-call.type$ -- 7
-change.case$ -- 55
-chr.to.int$ -- 10
-cite$ -- 6
-duplicate$ -- 244
-empty$ -- 422
-format.name$ -- 233
-if$ -- 1276
++ -- 109
+- -- 55
+* -- 368
+:= -- 861
+add.period$ -- 22
+call.type$ -- 8
+change.case$ -- 61
+chr.to.int$ -- 11
+cite$ -- 7
+duplicate$ -- 282
+empty$ -- 485
+format.name$ -- 256
+if$ -- 1427
 int.to.chr$ -- 0
 int.to.str$ -- 0
-missing$ -- 128
-newline$ -- 32
-num.names$ -- 30
-pop$ -- 197
+missing$ -- 147
+newline$ -- 36
+num.names$ -- 35
+pop$ -- 222
 preamble$ -- 1
-purify$ -- 25
+purify$ -- 28
 quote$ -- 0
-skip$ -- 316
+skip$ -- 352
 stack$ -- 1
-substring$ -- 152
-swap$ -- 95
+substring$ -- 169
+swap$ -- 109
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 38
+while$ -- 44
 width$ -- 0
-write$ -- 93
+write$ -- 107

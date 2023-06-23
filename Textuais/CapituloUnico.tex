@@ -282,7 +282,7 @@ Quando uma colisão entre dois AABBS é detectada, a sua geometria contida pode 
 Já a fase estreita, também segundo \citeonline{ericson2004real},  é responsável pelo trabalho mais detalhado e preciso da detecção de colisão.
 É nesta fase onde os algoritmos e técnicas específicas são aplicadas para determinar se de fato os pares de objetos indicados pela fase anterior estão colidindo.
 Caso estejam colidindo, informações como vetor normal, ponto de contato e profundidade de penetração devem ser calculados para uso posterior.
-
+O uso do ponto de contato é discutido em \citeonline{baraff1992dynamic}, enquanto a normal e profundidade de penetração são explicados em \citeonline{bourg2013physics}.
 \subsection{Algoritmos para Fase Ampla}
 Em um ambiente simulado podem existir muitos objetos, alguns próximos outros distantes. 
 Ao selecionar um objeto qualquer deste conjunto de objetos queremos saber com quais outros objetos existe a chance de colisão. 
@@ -527,7 +527,7 @@ a mesma. Em simulações que não requerem um realismo muito grande, apenas a
 correção das posições dos objetos torna-se necessária.
 
 Em simulações mais avançadas, como simulações de física, outros métodos podem
-ser utilizados como a resolução de colisão por impulso.
+ser utilizados como a resolução de colisão por impulso discutida em \citeonline{bourg2013physics} e \citeonline{baraff1992dynamic}.
 Neste método, características físicas dos objetos são levados em consideração
 para que os objetos reajam de forma adequada e mais natural.
 
