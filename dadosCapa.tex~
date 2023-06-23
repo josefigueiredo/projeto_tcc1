@@ -4,7 +4,7 @@
 \titulo{Detecção de Colisões em Simulações Computacionais}
 \autor{Róger Matheus Lasch}
 \orientador{Me. José Antônio Oliveira de Figueiredo}
-\coorientador{Dr. Jucelino Cortez}
+\coorientador{Me. Jucelino Cortez}
 \local{Passo Fundo}
 \data{\the\year}
 \instituicao{%
@@ -33,7 +33,7 @@
 	pdfauthor={\@author},
 	pdfsubject={\imprimirpreambulo},
 	pdfcreator={LaTeX with abnTeX2},
-	pdfkeywords={Simulação computacional}{Detecção de Colisão}, 
+	pdfkeywords={abnt}{latex}{abntex}{abntex2}{projeto de pesquisa}, 
 	colorlinks=true,       		% false: boxed links; true: colored links
 	linkcolor=blue,          	% color of internal links
 	citecolor=blue,        		% color of links to bibliography
