@@ -64,7 +64,7 @@ Na computação, não existe maneira correta ou incorreta de representar a geome
 
 Neste estudo será adotada a representação vetorial, devido a sua simplicidade e fácil compreensão. O trabalho será desenvolvido com 3 geometrias principais, que são: esferas, caixas e poliedros.
 
-Para representação dessas formas geométricas, são utilizados pontos de coordenadas cartesianas, definidos em uma estrutura de vetor tridimensional. demonstrado no Código~\ref{code:vec_1}
+Para representação dessas formas geométricas, são utilizados pontos de coordenadas cartesianas, definidos em uma estrutura de vetor tridimensional, conforme demonstrado no Código~\ref{code:vec_1}.
 
 \begin{lstlisting}[frame=single,caption=Exemplo de vetor 3d\label{code:vec_1}]
 class vector3d{
@@ -190,7 +190,7 @@ Neste trabalho não usaremos poliedros pois eles utilizam algoritmos mais
 sofisticados para operarem sobre nuvens de pontos para detectar colisões.
 Em \citeonline{ericson2004real} é discutido com mais detalhes poliedros e seus algoritmos específicos.
 
-\subsection{ Estruturas para delimitação de volumes}
+\subsection{Estruturas para delimitação de volumes}
 
 Em uma simulação computacional existem diversos objetos e o ambiente precisa testar se alguma colisão ocorreu. Este monitoramento constante acaba tendo um alto custo computacional. Para otimizar esse processo, os simuladores utilizam estruturas chamadas delimitadores de volume, que fazem um encapsulamento da geometria em avaliação.
 
@@ -244,7 +244,7 @@ encontra.
 
 \subsubsection{Representação de um Corpo Rígido}
 
-Para fins de exemplos, a seguinte representação de corpo rígido será adotada:
+Para fins de exemplos, neste trabalho será adotada representação de corpo rígido do Código~\ref{code:RigidBody}.
 
 \begin{lstlisting}[frame=single,caption=Exemplo de corpo rígido\label{code:RigidBody}]
 class RigidBody{
@@ -304,9 +304,7 @@ Este critério pode ser uma profundidade máxima para a árvore, ou o tamanho do
 nó que será dividido atingiu um limite mínimo.
 
 Os objetos indexados pela estrutura serão adicionados no menor nó que seja capaz de conter todo o volume do objeto.
-Com esta compartimentação espacial, os objetos só precisam verificar a possibilidade de colisão com seus irmãos, e com os nós mais profundos acelerando assim o processo.
-
-A figura~\ref{fig:figura1} mostra a representação de uma árvore octree e seus filhos.
+Com esta compartimentação espacial, os objetos só precisam verificar a possibilidade de colisão com seus irmãos, e com os nós mais profundos acelerando assim o processo. A Figura~\ref{fig:figura1} mostra a representação de uma árvore octree e seus filhos.
 \begin{figure}[htb]
   \centering
 	\caption{\label{fig:figura1} Figura mostrando a representação de uma octree}
@@ -314,10 +312,15 @@ A figura~\ref{fig:figura1} mostra a representação de uma árvore octree e seus
 	\legend{Fonte: \cite{ericson2004real}. }
 \end{figure}
 
-\noindent\footnotesize Descrição da Imagem: A figura~\ref{fig:figura1} representa um cubo, tridimensional, em perspectiva (de forma que vemos três faces e um canto). Este cubo (que representa um nó na estrutura octree) é dividido em 8 subcubos - com $1/8$ vezes o tamanho do cubo maior. Em outras palavras, o cubo é dividido na metade nos eixos x,y e z.
-\noindent\footnotesize Na imagem vemos 7 subcubos numerados de 0 até 8. Na parte inferior estão os cubos 0 (que não é visível por estar escondido atrás dos outros nessa perspectiva); Vindo da direita para esquerda estão os cubos 1,5 e 4. Na parte superior estão os cubos 3,7,6 e 2. O cubo 2 está sobre o cubo 0; o cubo 3 está sobre o cubo 1; o cubo 7 está sobre o cubo 7 e, por fim, o cubo 6 está sobre o cubo 4.
+\begin{framed}
+\footnotesize
+\noindent Descrição da Imagem: A Figura~\ref{fig:figura1} representa um cubo, tridimensional, em perspectiva (de forma que vemos três faces e um canto). Este cubo (que representa um nó na estrutura octree) é dividido em 8 subcubos - com $1/8$ vezes o tamanho do cubo maior. Em outras palavras, o cubo é dividido na metade nos eixos x,y e z.
 
-A figura~\ref{fig:figura2} mostra uma árvore quadtree, que é a versão bidimensional de uma árvore octree. Nesta figura é ilustrado como os objetos adicionados ficam indexados nos nós.
+\noindent Na imagem vemos 7 subcubos numerados de 0 até 8. Na parte inferior estão os cubos 0 (que não é visível por estar escondido atrás dos outros nessa perspectiva); Da direita para esquerda estão os cubos 1,5 e 4. Na parte superior estão os cubos 3,7,6 e 2. O cubo 2 está sobre o cubo 0; o cubo 3 está sobre o cubo 1; o cubo 7 está sobre o cubo 7 e, por fim, o cubo 6 está sobre o cubo 4.
+\end{framed}
+
+A Figura~\ref{fig:figura2} mostra uma árvore quadtree, que é a versão bidimensional de uma árvore octree. Nesta figura é ilustrado como os objetos adicionados ficam indexados nos nós.
+
 \begin{figure}[htb]
   \centering
 	\caption{\label{fig:figura2} Figura ilustrando uma árvore octree acomodando objetos}
@@ -325,11 +328,16 @@ A figura~\ref{fig:figura2} mostra uma árvore quadtree, que é a versão bidimen
 	\legend{Fonte: \cite{ericson2004real}. }
 \end{figure}
 
-\noindent\footnotesize Descrição da Imagem: A imagem da Figura~\ref{fig:figura2}: mostra um quadrado subdividido em quadrados menores, com 15 bolinhas distribuídas aleatoriamente, que representam objetos da simulação. Nenhuma bolinha toca outra, portanto não existe colisão entre os objetos da simulação. O quadrado maior (1º nível na quadtree) é então dividido ao meio (verticalmente e horizontalmente), formando 4 subquadrados menores (2º nível na quadtree). Na imagem, esta divisão é representada por linhas pontilhadas. A seguir, uma nova divisão ocorre e cada subquadrado é dividido novamente (verticalmente e horizontalmente) em 4 novos subquadrados (3º nível na quadtree). Na imagem, esta divisão é representada por linhas tracejadas. 
+\begin{framed}
+\footnotesize
 
-\noindent\footnotesize Ao final das divisões, cada quadrado foi dividido em 4 subquadrados. As bolinhas dentro do quadrado inicial são agora classificados em função de sua posição estão nestas divisões dos quadrados. Se alguma bolinha foi “cortada” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
+\noindent Descrição da Imagem: A Figura~\ref{fig:figura2}: mostra um quadrado subdividido em quadrados menores, com 15 bolinhas distribuídas aleatoriamente, que representam objetos da simulação. Nenhuma bolinha toca outra, portanto não existe colisão entre os objetos da simulação. O quadrado maior (1º nível na quadtree) é então dividido ao meio (verticalmente e horizontalmente), formando 4 subquadrados menores (2º nível na quadtree). Na imagem, esta divisão é representada por linhas pontilhadas. A seguir, uma nova divisão ocorre e cada subquadrado é dividido novamente (verticalmente e horizontalmente) em 4 novos subquadrados (3º nível na quadtree). Na imagem, esta divisão é representada por linhas tracejadas. 
 
-\noindent\footnotesize A primeira divisão (linha pontilhada) “corta” 3 bolinhas (cor cinza escuro). Estas bolinhas pertencem ao quadrado maior (1º nível); As linhas tracejadas “cortam” 5 bolinhas (cor cinza claro). Estas bolinhas pertencem aos quadrados da primeira divisão (2º nível); As bolinhas que não estão sendo cortadas por nenhuma linha (cor branco), ficaram exatamente dentro dos quadrados menores (3º nível).
+\noindent Ao final das divisões, cada quadrado foi dividido em 4 subquadrados. As bolinhas dentro do quadrado inicial são agora classificados em função de sua posição estão nestas divisões dos quadrados. Se alguma bolinha foi “cortada” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
+
+\noindent A primeira divisão (linha pontilhada) “corta” 3 bolinhas (cor cinza escuro). Estas bolinhas pertencem ao quadrado maior (1º nível); As linhas tracejadas “cortam” 5 bolinhas (cor cinza claro). Estas bolinhas pertencem aos quadrados da primeira divisão (2º nível); As bolinhas que não estão sendo cortadas por nenhuma linha (cor branco), ficaram exatamente dentro dos quadrados menores (3º nível).
+\end{framed}
+
 
 \subsubsection{Classificar e Varrer}
 
@@ -381,21 +389,26 @@ gSortAxis = 2;
 }
 \end{lstlisting}
 
-A figura~\ref{fig:figura3} ilustra um grupo de objetos antes de passar pela fase ampla, e os objetos após a passagem pela fase ampla.
+A Figura~\ref{fig:figura3} ilustra um grupo de objetos antes de passar pela fase ampla, e os objetos após a passagem pela fase ampla.
 \begin{figure}[htb]
   \centering
 	\caption{\label{fig:figura3} Ilustração de objetos antes e depois de passarem pela fase ampla}
-	\includegraphics[scale=0.5]{Imagens/Figura_2.4.png} %width=\textwidth
-	\legend{Fonte: \cite{ericson2004real}. }
+	\includegraphics[scale=0.4]{Imagens/Figura_2.4.png} %width=\textwidth
+	\legend{Fonte: \citeonline{ericson2004real}. }
 \end{figure}
 
-\noindent\footnotesize Descrição da Imagem: A figura\ref{fig:figura3} apresenta o resultado do processamento na fase ampla. A imagem tem duas partes, a parte a esquerda mostra os objetos antes do processamento da fase ampla; a parte a direita mostra os agrupamentos feitos pelo processamento da fase ampla.
-\noindent\footnotesize Antes do processamento, a imagem mostra 11 objetos retangulares dispostos de forma aleatória. Nesta distribuição é possível agrupar os elementos por proximidade, pois alguns estão mais próximos do que outros. Pode-se dizer que os objetos poderiam ser separados em 3 colunas.
-\noindent\footnotesize Na primeira coluna estão 4 objetos, destes 3 objetos que são maiores e estão em colisão enquanto 1 objeto está sozinho (bem menor) mas bem no meio. Na segunda coluna, também estão 4 objetos, destes 2 (bem na parte superior da coluna) estão em colisão. Logo abaixo estão 2 objetos separados, um mais próximo desta colisão (no meio da coluna) e outro mais distante (bem na parte inferior desta coluna). Na terceira coluna estão 3 objetos, sendo que 1 está sozinho (bem na parte superior desta coluna) e 2 estão em colisão (na parte inferior desta coluna).
-\noindent\footnotesize Na parte direita da imagem estão os mesmos blocos, na mesma distribuição, mas agora agrupados em função do processamento da fase ampla. Os agrupamentos são representados por uma área sombreada em torno dos objetos. Os 11 objetos foram agrupados em 5 subgrupos menores, destes, 3 subgrupos possuem objetos que colidem e 2 possuem objetos isolados (sozinhos). A separação ficou da seguinte forma:
-\noindent\footnotesize A primeira coluna tornou-se um subgrupo completo com os mesmos 4 objetos. Da segunda coluna, há um subgrupo com os 3 objetos superiores (2 em colisão e 1 bem próximo). O objeto mais distante (bem na parte inferior da coluna) ficou sozinho em um subgrupo.
-\noindent\footnotesize A terceira coluna gerou 2 subgrupos. O objeto que estava sozinho na parte superior ficou em um subgrupo, também sozinho. Já os objetos da parte inferior formaram um subgrupo com os dois objetos de baixo (em colisão).
-\noindent\footnotesize Após a fase ampla (que usa divisão e conquista) estes 11 objetos foram separados em 5 subgrupos. Destes 5 subgrupos, 3 possuem objetos que colidem e 2 possuem objetos isolados (sozinhos)
+\begin{framed}
+\footnotesize
+\noindent Descrição da Imagem: A Figura~\ref{fig:figura3} apresenta o resultado do processamento na fase ampla. A imagem tem duas partes: a esquerda, que  mostra os objetos antes do processamento da fase ampla; a direita, que mostra os agrupamentos feitos pelo processamento da fase ampla. Antes do processamento, a imagem mostra 11 objetos retangulares dispostos de forma aleatória, mas que podem ser agrupados por proximidade (alguns estão mais próximos do que outros). Pode-se dizer que os objetos poderiam ser separados em 3 grupos verticais, como colunas.
+
+\noindent Na primeira coluna há 4 objetos: 3 são maiores e estão em colisão; 1 menor, está sozinho bem no meio. Na segunda coluna, também há 4 objetos: 2 na parte superior, em colisão;  2 objetos separados na parte de baixo da coluna, um mais próximo desta colisão (meio da coluna) e outro mais distante (bem na parte inferior da coluna). Na terceira coluna há 3 objetos: 1 está sozinho (na parte superior), 2 estão em colisão (parte inferior da coluna).
+
+\noindent Na parte direita da imagem estão os mesmos blocos, na mesma organização, mas agora agrupados em função do processamento da fase ampla. Os agrupamentos são representados por uma área sombreada em cinza em torno dos objetos. Os 11 objetos foram agrupados em 5 subgrupos menores. Destes, 3 subgrupos possuem objetos que colidem e 2 possuem objetos isolados. A separação ficou da seguinte forma:
+
+\noindent A primeira coluna tornou-se um subgrupo completo com os mesmos 4 objetos. A segunda coluna ficou com um subgrupo com os 3 objetos superiores (2 em colisão e 1 bem próximo). O objeto mais distante (bem na parte inferior da coluna) ficou sozinho em um subgrupo. A terceira ficou com 2 subgrupos: O objeto que estava na parte superior ficou em um subgrupo, também sozinho. Já os objetos da parte inferior formaram um subgrupo com os dois objetos de baixo.
+
+\noindent Após a fase ampla estes 11 objetos foram separados em 5 subgrupos. Destes 5 subgrupos, 3 possuem objetos que colidem e 2 possuem objetos isolados (sozinhos)
+\end{framed}
 
 \subsection{Algoritmos de Fase Estreita}
 
@@ -525,9 +538,7 @@ em colisão sejam estáticos.
 Caso um dos objetos seja dinâmico e o outro estático, a resolução da colisão
 deve atuar apenas no objeto dinâmico.
 Caso os dois objetos sejam dinâmicos, a resolução deve atuar sobre os dois
-objetos em direções opostas.
-
-O Código~\ref{code:solveCollision} exemplifica este processo.
+objetos em direções opostas. O Código~\ref{code:solveCollision} exemplifica este processo.
 
 \begin{lstlisting}[frame=single,caption=Exemplo de resolução de colisão\label{code:solveCollision}]
 void solveCollision(object* b1, object* b2, vector3d contactPoint, vector3d normal, vector3d depth){
@@ -586,7 +597,15 @@ Os objetos simulados poderão, por meio de um painel, ter os seguintes parâmetr
 \end{itemize}
 
 \subsubsection{Modelagem preliminar do simulador}
-Nesta sessão é apresentado a modelagem preliminar da engine de simulação. Os principais componentes são comentados.
+Nesta sessão é apresentado a modelagem preliminar da engine de simulação. Os principais componentes são comentados. 
+
+A classe descrita em Código~\ref{ps:vec3d} representará as coordenadas cartesianas tridimensionais no espaço.
+Existem três componentes fundamentais:
+\begin{itemize}
+  \item eixoX: Representa a distância do ponto em relação a uma origem de referência horizontalmente.
+  \item eixoy: Representa verticalmente a distância do ponto até a origem.
+  \item eixoz: É o eixo perpendicular ao eixo x e eixo y. Utilizado para dar profundidade.
+\end{itemize}
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para vetor3d\label{ps:vec3d}]
 class vetor3d{
@@ -602,17 +621,13 @@ class vetor3d{
 };
 \end{lstlisting}
 
-A classe descrita em Código~\ref{ps:vec3d} representará as coordenadas cartesianas tridimensionais no espaço.
-Existem três componentes fundamentais:
-\begin{itemize}
-  \item eixoX: Representa a distância do ponto em relação a uma origem de referência horizontalmente.
-  \item eixoy: Representa verticalmente a distância do ponto até a origem.
-  \item eixoz: É o eixo perpendicular ao eixo x e eixo y. Utilizado para dar profundidade.
-\end{itemize}
-
 O Código~\ref{ps:vec3d} também tem diversas operações associadas como soma, subtração,
 multiplicação e divisão. Também possui métodos específicos como normalização,
 magnitude, inverso e seus produtos como produto vetorial e escalar.
+
+
+A classe de forma geométrica apresentada no Código~\ref{ps:geometricshape} é uma base para as próximas implementações de
+esferas e caixas. Nela são declados os padrões que devem ser seguidos pelas classes filhas.
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para interface de forma geométrica\label{ps:geometricshape}]
 class FormaGeometrica{
@@ -626,8 +641,11 @@ class FormaGeometrica{
 };
 \end{lstlisting}
 
-A classe de forma geométrica apresentada no Código~\ref{ps:geometricshape} é uma base para as próximas implementações de
-esferas e caixas. Nela são declados os padrões que devem ser seguidos pelas classes filhas.
+A classe Esfera apresentada Código~\ref{ps:formGeo} tem 2 atributos principais que são:
+\begin{itemize}
+  \item PontoCentral: É um vetor que representa as coordenadas centrais da esfera.
+  \item Raio: Representa o quanto a esfera se estende em todas as direções a partir do centro.
+\end{itemize}
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para esfera 3d e caixa \label{ps:formGeo}]
 class Esfera estende FormaGeometrica{
@@ -641,11 +659,6 @@ class Caixa estende FormaGeometrica{
 };
 \end{lstlisting}
 
-A classe Esfera apresentada Código~\ref{ps:formGeo} tem 2 atributos principais que são:
-\begin{itemize}
-  \item PontoCentral: É um vetor que representa as coordenadas centrais da esfera.
-  \item Raio: Representa o quanto a esfera se estende em todas as direções a partir do centro.
-\end{itemize}
 
 
 A classe Caixa apresentada em Código~\ref{ps:formGeo} tem duas propriedades que também são importantes:
@@ -654,6 +667,15 @@ A classe Caixa apresentada em Código~\ref{ps:formGeo} tem duas propriedades que
   \item Arestas: É o quanto as arestas se estendem nos 3 eixos a partir do canto inferior esquerdo.
 \end{itemize}
 
+A classe apresentada no Código~\ref{ps:aabb}  é responsável por representar um volume delimitador para envolver completamente uma forma geométrica, seja ela esfera, caixa ou poliedro.
+
+A classe possui 3 atributos principais:
+\begin{itemize}
+  \item min: É um vetor representando o canto inferior esquerdo do aabb.
+  \item max: É um vetor representando o canto superior direito do aabb.
+  \item FormaGeometrica: É a forma geométrica que o aabb está contendo.
+  \item Métodos: Os métodos da classe são redimensionar e trasladar.
+\end{itemize}
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para AABB\label{ps:aabb}]
 class AABB{
@@ -667,15 +689,9 @@ class AABB{
 };
 \end{lstlisting}
 
-A classe apresentada no Código~\ref{ps:aabb}  é responsável por representar um volume delimitador para envolver completamente uma forma geométrica, seja ela esfera, caixa ou poliedro.
 
-A classe possui 3 atributos principais:
-\begin{itemize}
-  \item min: É um vetor representando o canto inferior esquerdo do aabb.
-  \item max: É um vetor representando o canto superior direito do aabb.
-  \item FormaGeometrica: É a forma geométrica que o aabb está contendo.
-  \item Métodos: Os métodos da classe são redimensionar e trasladar.
-\end{itemize}
+O Código~\ref{ps:collisioninfo} da classe CollisionInfo é responsável por conter informações sobre a colisão que foi detectada como ponto de colisão, normal, profundidade, e os objetos envolvidos na colisão.
+
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para coletor de informações\label{ps:collisioninfo}]
 class Colisao_info{
@@ -687,7 +703,7 @@ class Colisao_info{
 };
 \end{lstlisting}
 
-O Código~\ref{ps:collisioninfo} da classe CollisionInfo é responsável por conter informações sobre a colisão que foi detectada como ponto de colisão, normal, profundidade, e os objetos envolvidos na colisão.
+O Código~\ref{ps:collision3d} da classe de colisão irá conter os métodos específicos de colisão entre as formas geométricas específicas como esferas x esferas, caixas x caixas e poliedros x poliedros.
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para classe estática para colisões\label{ps:collision3d}]
 class Colisao{
@@ -700,7 +716,8 @@ class Colisao{
 };
 \end{lstlisting}
 
-O Código~\ref{ps:collision3d} da classe de colisão irá conter os métodos específicos de colisão entre as formas geométricas específicas como esferas x esferas, caixas x caixas e poliedros x poliedros.
+
+A interface do Código~\ref{ps:rigidbody} define alguns atributos básicos que será necessário ao modelar o objeto. Se precisarmos de atributos mais específicos, ou se quisermos expandir nossa simulação futuramente, basta sub-classificarmos esta interface e realizar as mudanças necessárias.
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para interface de corpo rígido\label{ps:rigidbody}]
 class Corpo_rigido_interface{
@@ -712,26 +729,24 @@ class Corpo_rigido_interface{
   };
 \end{lstlisting}
 
-A interface do Código~\ref{ps:rigidbody} define alguns atributos básicos que será necessário ao modelar o objeto. Se precisarmos de atributos mais específicos, ou se quisermos expandir nossa simulação futuramente, basta sub-classificarmos esta interface e realizar as mudanças necessárias.
 
-\begin{lstlisting}[frame=single,caption=Modelagem prévia para fase ampla\label{ps:broadphase}]
-class Fase_ampla{
-  escanear(lista_de_objetos, lista_de_possiveis_colisoes)
-};
-\end{lstlisting}
-
-A interface do Código~\ref{ps:broadphase} representa o nosso algoritmo de broadphase. Como existem diversos algoritmos, optou-se de criar uma interface e realizar a implementação separadamente.
+A interface FaseAmpla do Código~\ref{ps:phases} representa o nosso algoritmo de broadphase. Como existem diversos algoritmos, optou-se de criar uma interface e realizar a implementação separadamente.
 
 O método scan recebe um vetor de corpos rígidos para verificar, e também uma lista onde será armazenado informações sobre uma possível colisão.
 
-\begin{lstlisting}[frame=single,caption=Modelagem prévia para fase estreita\label{ps:narrowphase}]
-class Fase_estreita{
+\begin{lstlisting}[frame=single,caption=Modelagem prévia para fase ampla e estreita\label{ps:phases}]
+class FaseAmpla{
+  escanear(lista_de_objetos, lista_de_possiveis_colisoes)
+};
+
+class FaseEstreita{
   detectar_colisoes(lista_de_possiveis_colisoes, lista_de_colisoes)
 };
 \end{lstlisting}
 
-Este Código~\ref{ps:narrowphase} implementa o algoritmo de fase estreita da mesma forma que a interface de fase ampla. Este algoritmo recebe uma lista de possíveis colisões e sua tarefa é aplicar os testes de detecção de colisão entre geometrias específicas e avaliar se de fato, o par testado está colidindo.
+A classe FaseEstreita do Código~\ref{ps:phases} implementa o algoritmo de fase estreita da mesma forma que a interface de fase ampla. Este algoritmo recebe uma lista de possíveis colisões e sua tarefa é aplicar os testes de detecção de colisão entre geometrias específicas e avaliar se de fato, o par testado está colidindo.
 
+O Código~\ref{ps:collisionsolver} irá resolver as colisões detectadas. Ele age separando os corpos se existir sobreposição, e aplicando impulso.
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para solucionador de colisões\label{ps:collisionsolver}]
 class Solucionador_de_colisao{
   resolver(lista_de_colisoes)
@@ -739,7 +754,7 @@ class Solucionador_de_colisao{
 };
 \end{lstlisting}
 
-Este Código~\ref{ps:collisionsolver} irá resolver as colisões detectadas. Ele age separando os corpos se existir sobreposição, e aplicando impulso.
+O Código~\ref{ps:integrator} implementa o algoritmo que fará os objetos se movimentarem na simulação. Para isso serão utilizadas equações das leis de Newton.
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para integrador numérico\label{ps:integrator}]
 class Integrador_numerico{
@@ -748,7 +763,10 @@ class Integrador_numerico{
 };
 \end{lstlisting}
 
-Este Código~\ref{ps:integrator} implementa o algoritmo que fará os objetos se movimentarem na simulação. Para isso serão utilizadas equações das leis de Newton.
+
+O Código~\ref{ps:octree} da octree é utilizada na fase ampla, mas como ela é relativamente cara de se construir, ela é utilizada em objetos estáticos como obstáculos que representam a geografia do ambiente simulado. 
+
+A classe tem 2 métodos de fase ampla. O primeiro, recebe uma lista de todos objetos que queremos que sejam testados, e a saída é uma lista com todas as colisões detectadas. O segundo método, recebe um objeto e uma lista de saída de colisões detectadas.
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para octree\label{ps:octree}]
 class Octree{
@@ -760,7 +778,9 @@ class Octree{
 }
 \end{lstlisting}
 
-O Código~\ref{ps:octree} da octree é utilizada na fase ampla, mas como ela é relativamente cara de se construir, ela é utilizada em objetos estáticos como obstáculos que representam a geografia do ambiente simulado. A classe tem 2 métodos de fase ampla. O primeiro, recebe uma lista de todos objetos que queremos que sejam testados, e a saída é uma lista com todas as colisões detectadas. O segundo método, recebe um objeto e uma lista de saída de colisões detectadas.
+O Código~\ref{ps:world} é responsável pela simulação do ambiente. Para isso recebe e manipula todos os objetos instanciados pelas classes anteriormente descritas. A classe permite adicionar e remover objetos, e também definir os algoritmos utilizados para realizar as tarefas.
+O método de atualização será chamado sempre que um passo na simulação for avançado. Ele primeiramente movimentará os objetos, e então fará a fase ampla, fase
+estreita, e resolverá as colisões.
 
 \begin{lstlisting}[frame=single,caption=Modelagem prévia para ambiente de simulação\label{ps:world}]
 class Ambiente_de_simulacao estende AABB{
@@ -778,9 +798,6 @@ class Ambiente_de_simulacao estende AABB{
 };
 \end{lstlisting}
 
-Este Código~\ref{ps:world} é responsável pela simulação do ambiente. Para isso recebe e manipula todos os objetos instanciados pelas classes anteriormente descritas. A classe permite adicionar e remover objetos, e também definir os algoritmos utilizados para realizar as tarefas.
-O método de atualização será chamado sempre que um passo na simulação for avançado. Ele primeiramente movimentará os objetos, e então fará a fase ampla, fase
-estreita, e resolverá as colisões.
 
 \subsubsection{Requisitos do Projeto}
 
