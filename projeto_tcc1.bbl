@@ -19,4 +19,19 @@
 \abntrefinfo{Ericson}{ERICSON}{2004}
 {ERICSON, C. \emph{Real-time collision detection}. [S.l.]: Crc Press, 2004.}
 
+\bibitem[Foley 1996]{foley1996}
+\abntrefinfo{Foley}{FOLEY}{1996}
+{FOLEY, J.~D. \emph{Computer graphics: principles and practice}. [S.l.]:
+  Addison-Wesley Professional, 1996. v. 12110.}
+
+\bibitem[Marschner e Shirley 2018]{marschner2018}
+\abntrefinfo{Marschner e Shirley}{MARSCHNER; SHIRLEY}{2018}
+{MARSCHNER, S.; SHIRLEY, P. \emph{Fundamentals of computer graphics}. [S.l.]:
+  CRC Press, 2018.}
+
+\bibitem[Pharr, Jakob e Humphreys 2016]{pharr2016}
+\abntrefinfo{Pharr, Jakob e Humphreys}{PHARR; JAKOB; HUMPHREYS}{2016}
+{PHARR, M.; JAKOB, W.; HUMPHREYS, G. \emph{Physically based rendering: From
+  theory to implementation}. [S.l.]: Morgan Kaufmann, 2016.}
+
 \end{thebibliography}
