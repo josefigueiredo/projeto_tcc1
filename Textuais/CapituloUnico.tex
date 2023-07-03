@@ -799,6 +799,57 @@ class Ambiente_de_simulacao estende AABB{
 };
 \end{lstlisting}
 
+\subsection{Fluxograma}
+\begin{itemize}
+\item Fase 1
+\begin{itemize}
+\item Iniciar bibliotecas
+\item Criar janela de visualização
+\item Criar menus
+\item Definir cena atual
+\item Ouvir eventos
+\end{itemize}
+\item Fase 2:
+\begin{itemize}
+\item Criar cena
+\item Configurar tamanho do ambiente
+\item Definir gravidade
+\item Definir passo de tempo
+\item Definir duração máxima da simulação em segundos
+\begin{itemize}
+\item Fase 2.1
+Adicionar objeto
+\item Definir massa
+\item Definir restituição
+\item Definir posição
+\item Definir forma geométrica
+\item Definir velocidade
+\end{itemize}
+\begin{itemize}
+\item Fase 2.2
+\item Adicionar objeto na cena
+\item Massa = 0 Adicionar na octree
+\item Massa > 0 Adicionar em objetos dinâmicos
+\end{itemize}
+\end{itemize}
+\item Fase 3:
+\begin{itemize}
+\item Iniciar simulação
+\item Enquanto tempo atual < duração da simulação
+\item Mover objetos dinâmicos com base nas leis de Newton
+\item Verificar possíveis colisões entre objetos dinâmicos
+\item Verificar possíveis colisões entre objetos dinãmicos e estáticos
+\item Verificar colisões entre os objetos previamente selecionados
+\item Resolver colisões
+\item Atualizar gráficos
+\end{itemize}
+\item Fase 4:
+\begin{itemize}
+\item Fim da simulação
+\item Listar objetos
+\item Examinar objetos
+\end{itemize}
+\end{itemize}
 
 \subsection{Requisitos do Projeto}
 
