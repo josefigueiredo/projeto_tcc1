@@ -3,20 +3,20 @@
 
 \section{Tema}
 
-Simulação Computacional.
+Simulação Computacional de corpos rígidos.
 
 \subsection{Delimitação do tema}
 
-Detecção de colisão entre objetos em simulações computacionais.
+Detecção de colisão entre objetos em simulações computacionais de corpos rígidos.
 
 \section{Problema}
 
- Estudar e avaliar os mecanismos para detecção de colisão em uma simulação computacional que busca apresentar objetos de forma mais realística possível.
+ Estudar e avaliar os mecanismos para detecção de colisão em uma simulação computacional de corpos rígidos.
 
 
 \section{Objetivos}
 \subsection{Objetivo Geral}
-Explicar como funciona a detecção de colisão em simulações computacionais.
+Explicar como funciona a detecção de colisão em simulações computacionais de corpos rígidos.
 
 \subsection{Objetivos Específicos}
 \begin{enumerate}
@@ -59,7 +59,7 @@ A simulação é uma poderosa ferramenta que contribue na descoberta de novas
 tecnologias, ou no aprimoramento das existentes.
 
 
-\subsubsection{Representação Computacional de Formas Geométricas}
+\subsection{Representação Computacional de Formas Geométricas}
 Na computação, não existe maneira correta ou incorreta de representar a geometria. A forma usada dependerá do nível de detalhamento desejado \citeonline{pharr2016}. É possível fazer esta representação de diversas maneiras, por exemplo: forma vetorial, paramétrica ou de forma poligonal.
 
 Neste estudo será adotada a representação vetorial, devido a sua simplicidade e fácil compreensão. O trabalho será desenvolvido com 3 geometrias principais, que são: esferas, caixas e poliedros.
@@ -91,9 +91,8 @@ produto cruzado e produto triplo escalar que são relevantes para este estudo.
 
 \subsubsection{Esferas}
 
-As esferas são simples de representar computacionalmente \citeonline{pharr2016}, e também
-incrivelmente fáceis de se computar. Para representarmos uma esfera, tudo o que
-precisamos é de um ponto que representará o centro da esfera, e um raio, que
+As esferas são simples de representar computacionalmente \citeonline{pharr2016}, e também são simples de se computar.
+Para representarmos uma esfera, tudo o queprecisamos é de um ponto que representará o centro da esfera, e um raio, que
 indica o quanto a esfera se estende em todas as direções a partir do centro.
 Em \citeonline{ericson2004real} é possível encontrar uma implementação geral de esferas, e em \citeonline{bourg2013physics} é possível perceber na prática como usar uma bounding sphere.
 
@@ -119,7 +118,7 @@ direções.
 
 \subsubsection{Caixas}
 
-As caixas são trivialmente representáveis de diversas formas. Com elas podemos
+As caixas podem ser representadas de diversas formas. Com elas podemos
 representar formas cuboides facilmente. Ela normalmente é representada por dois
 vetores, onde um indica o canto inferior esquerdo, e o outro o canto superior direito.
 
@@ -190,7 +189,8 @@ Neste trabalho não usaremos poliedros pois eles utilizam algoritmos mais
 sofisticados para operarem sobre nuvens de pontos para detectar colisões.
 Em \citeonline{ericson2004real} é discutido com mais detalhes poliedros e seus algoritmos específicos.
 
-\subsection{Estruturas para delimitação de volumes}
+\subsection{Colisão}
+\subsubsection{Estruturas para delimitação de volumes}
 
 Em uma simulação computacional existem diversos objetos e o ambiente precisa testar se alguma colisão ocorreu. Este monitoramento constante acaba tendo um alto custo computacional. Para otimizar esse processo, os simuladores utilizam estruturas chamadas delimitadores de volume, que fazem um encapsulamento da geometria em avaliação.
 
@@ -228,37 +228,6 @@ public:
 
 Neste trabalho optou-se pela utilização da estrutura AABB, devido à relativa facilidade de implementação em relação a estrutura OBB
 
-\subsubsection{Corpo Rígido}
-Segundo \citeonline{bourg2013physics} Um corpo rígido é um conjunto de partículas  que permanecem a distâncias fixas umas das outras  sem nenhum tipo de translação ou rotação entre elas. Em outras palavras,  um corpo rígido não mudará de forma enquanto se move, ou sua deformação é tão insignificante que pode ser desprezada.
-
-Um corpo rígido é  frequentemente representado como tendo uma posição, uma orientação  e  dimensões para representar seu volume. Estes são requisitos mínimos para a  sua definição, porém, dependendo do nível de precisão desejada, pode-se adicionar mais atributos como tensores de inércia, velocidades lineares e angulares, coeficiente de restituição, e o que mais for necessário para que se atinja os objetivos desejados.
-
-Existem 3 classes principais de corpos que podem ser representadas em uma simulação:
-Corpos rígidos, que não se deformam  enquanto se movem, ou caso se deformem, são capazes de voltar a sua forma original;
-
-
-Corpos macios, que podem deformar enquanto se movem ou por ação de forças ou eventos externos;
-
-Ou corpos estáticos, que nada mais é que uma sub-classificação de um corpo rígido ou um corpo macio,  mas com a ausência de massa, ficando a sim, estacionário na posição em que se
-encontra.
-
-\subsubsection{Representação de um Corpo Rígido}
-
-Para fins de exemplos, neste trabalho será adotada representação de corpo rígido do Código~\ref{code:RigidBody}.
-
-\begin{lstlisting}[frame=single,caption=Exemplo de corpo rígido\label{code:RigidBody}]
-class RigidBody{
-public:
-  float mass;
-  float restitution;
-  vector3d lastPosition;
-  vector3d position;
-  vector3d velocity;
-  vector3d forces;
-  AABB* aabb;
-};
-\end{lstlisting}
-
 \subsection{Detecção de Colisão}
 Segundo \citeonline{bourg2013physics}, a detecção de colisão é um problema de geometria computacional que
 determina se e onde, dois ou mais objetos colidiram.
@@ -271,154 +240,6 @@ determinada tolerância. Em outros casos, os objetos podem estar se sobrepondo e
 Após uma colisão ser detectada, diversos dados precisam ser coletados para o processamento e resolução da colisão, que é feito posteriormente. Os dados coletados dependerão da natureza do simulador. Para um simulador de física, por exemplo, pode ser necessário o ponto ou pontos de contato onde os objetos colidiram, bem como a velocidade relativa destes objetos no instante da colisão.
 
 Outros dados relevantes para coleta na detecção de colisão são: o vetor normal, que é um vetor unitário que indica a direção em que a colisão aconteceu; e  a profundidade de sobreposição ou de penetração dos objetos, que estabelece o limite para que os objetos se toquem e não se sobreponham.
-
-\subsection{Fases da Detecção de Colisão}
-A detecção de colisão é dividida em duas áreas principais que são fase ampla e fase estreita.
-
-A fase ampla, segundo \citeonline{ericson2004real}, é responsável por determinar rapidamente pares de objetos que possivelmente estejam colidindo, descartando aqueles objetos que não estão.
-Nesta fase, os delimitadores AABBS das formas geométricas são testados pois possuem algoritmos simplificados e eficientes para esta tarefa.
-Quando uma colisão entre dois AABBS é detectada, a sua geometria contida pode não estar colidindo com a geometria do segundo AABB. Então estes dois objetos são agrupados para uma análise mais detalhada em uma fase posterior.
-
-Já a fase estreita, também segundo \citeonline{ericson2004real},  é responsável pelo trabalho mais detalhado e preciso da detecção de colisão.
-É nesta fase onde os algoritmos e técnicas específicas são aplicadas para determinar se de fato os pares de objetos indicados pela fase anterior estão colidindo.
-Caso estejam colidindo, informações como vetor normal, ponto de contato e profundidade de penetração devem ser calculados para uso posterior.
-O uso do ponto de contato é discutido em \citeonline{baraff1992dynamic}, enquanto a normal e profundidade de penetração são explicados em \citeonline{bourg2013physics}.
-\subsection{Algoritmos para Fase Ampla}
-Em um ambiente simulado podem existir muitos objetos, alguns próximos outros distantes. 
-Ao selecionar um objeto qualquer deste conjunto de objetos queremos saber com quais outros objetos existe a chance de colisão. 
-Em uma situação desta natureza, a complexidade dos testes normalmente é de O(n² ), onde n é o número de objetos a serem
-testados. Apesar de ser um problema polinomial, esta complexidade ainda é muito dispendiosa, porque os objetos mais distantes espacialmente não precisariam ser testados.
-
-Para acelerar este processo, segundo \citeonline{ericson2004real}, existem diversas estruturas de dados e técnicas de compartimentação espacial. 
-A lógica destas técnicas é agrupar os objetos que estão próximos uns dos outros e interromper a busca quando o restante dos objetos estão fora de alcance.
-
-Algumas das estruturas mais populares atualmente são as árvores octrees, grades uniformes e a divisão espacial por hash.
-
-\subsubsection{Octrees}
-
-Uma octree é uma estrutura de dados hierárquica que organiza um espaço
-tridimensional em células menores recursivamente.
-Dado um nó raiz, este nó é dividido em 8  filhos, que também podem ser
-subdivididos em mais 8 filhos até que um critério de parada seja satisfeito.
-Este critério pode ser uma profundidade máxima para a árvore, ou o tamanho do
-nó que será dividido atingiu um limite mínimo.
-
-Os objetos indexados pela estrutura serão adicionados no menor nó que seja capaz de conter todo o volume do objeto.
-Com esta compartimentação espacial, os objetos só precisam verificar a possibilidade de colisão com seus irmãos, e com os nós mais profundos acelerando assim o processo. A Figura~\ref{fig:figura1} mostra a representação de uma árvore octree e seus filhos.
-\begin{figure}[htb]
-  \centering
-	\caption{\label{fig:figura1} Figura mostrando a representação de uma octree}
-	\includegraphics[scale=0.5]{Imagens/Figura_7.10.png} %width=\textwidth
-	\legend{Fonte: \cite{ericson2004real}. }
-\end{figure}
-
-\begin{framed}
-\footnotesize
-\noindent Descrição da Imagem: A Figura~\ref{fig:figura1} representa um cubo, tridimensional, em perspectiva (de forma que vemos três faces e um canto). Este cubo (que representa um nó na estrutura octree) é dividido em 8 subcubos - com $1/8$ vezes o tamanho do cubo maior. Em outras palavras, o cubo é dividido na metade nos eixos x,y e z.
-
-\noindent Na imagem vemos 7 subcubos numerados de 0 até 8. Na parte inferior estão os cubos 0 (que não é visível por estar escondido atrás dos outros nessa perspectiva); Da direita para esquerda estão os cubos 1,5 e 4. Na parte superior estão os cubos 3,7,6 e 2. O cubo 2 está sobre o cubo 0; o cubo 3 está sobre o cubo 1; o cubo 7 está sobre o cubo 7 e, por fim, o cubo 6 está sobre o cubo 4.
-\end{framed}
-
-A Figura~\ref{fig:figura2} mostra uma árvore quadtree, que é a versão bidimensional de uma árvore octree. Nesta figura é ilustrado como os objetos adicionados ficam indexados nos nós.
-
-\begin{figure}[htb]
-  \centering
-	\caption{\label{fig:figura2} Figura ilustrando uma árvore octree acomodando objetos}
-	\includegraphics[scale=0.5]{Imagens/Figura_7.11.png} %width=\textwidth
-	\legend{Fonte: \cite{ericson2004real}. }
-\end{figure}
-
-\begin{framed}
-\footnotesize
-
-\noindent Descrição da Imagem: A Figura~\ref{fig:figura2}: mostra um quadrado subdividido em quadrados menores, com 15 bolinhas distribuídas aleatoriamente, que representam objetos da simulação. Nenhuma bolinha toca outra, portanto não existe colisão entre os objetos da simulação. O quadrado maior (1º nível na quadtree) é então dividido ao meio (verticalmente e horizontalmente), formando 4 subquadrados menores (2º nível na quadtree). Na imagem, esta divisão é representada por linhas pontilhadas. A seguir, uma nova divisão ocorre e cada subquadrado é dividido novamente (verticalmente e horizontalmente) em 4 novos subquadrados (3º nível na quadtree). Na imagem, esta divisão é representada por linhas tracejadas. 
-
-\noindent Ao final das divisões, cada quadrado foi dividido em 4 subquadrados. As bolinhas dentro do quadrado inicial são agora classificados em função de sua posição estão nestas divisões dos quadrados. Se alguma bolinha foi “cortada” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
-
-\noindent A primeira divisão (linha pontilhada) “corta” 3 bolinhas (cor cinza escuro). Estas bolinhas pertencem ao quadrado maior (1º nível); As linhas tracejadas “cortam” 5 bolinhas (cor cinza claro). Estas bolinhas pertencem aos quadrados da primeira divisão (2º nível); As bolinhas que não estão sendo cortadas por nenhuma linha (cor branco), ficaram exatamente dentro dos quadrados menores (3º nível).
-\end{framed}
-
-
-\subsubsection{Classificar e Varrer}
-
-Na detecção de colisão, existe uma categoria de algoritmos denominada de
-classificação e varredura. Estes algoritmos tem como objetivo determinar grupos
-de objetos que estão colidindo uns com os outros. Esta categoria de algoritmos é dividida em duas etapas principais:
-
-Classificação: Classifica os objetos seguindo um critério específico. Este
-critério pode ser ordenar os objetos ao longo de um determinado eixo.
-
-Varredura: Varre os objetos classificados detectando interseções entre os os
-objetos que estão na projeção do intervalo especificado.
-
-Segundo \citeonline{ericson2004real} o algoritmo começa ordenando o vetor de entrada por um dos eixos X, Y ou Z., em
-seguida, o vetor é percorrido, e em cada iteração os objetos são testados
-quanto a colisão. Caso o limite inferior do Código~\ref{code:aabb_1} seja maior do
-que o limite superior do AABB testado, o laço interno pode parar com segurança
-pois não existe mais risco de colisão com os próximos objetos. Em seguida, a
-variância dos eixos são calculados, e o eixo com a maior variância é
-selecionado para uma execução futura.
-
-\begin{lstlisting}[frame=single,caption=Exemplo de ordenar e varrer\label{code:SortAndSweep}]
-void SortAndSweepAABBArray(){
-qsort(gAABBArray, MAX_OBJECTS, sizeof(AABB *), cmpAABBs);
-float s[3]={0.0f, 0.0f, 0.0f}, s2[3]={0.0f, 0.0f, 0.0f},v[3];
-
-for (int i = 0; i < MAX_OBJECTS; i++){
-  Point p = 0.5f * (gAABBArray[i]->min + gAABBArray[i]->max);
-  for (int c = 0; c < 3; c++){
-    s[c] += p[c];
-    s2[c] += p[c] * p[c];
-  }
-
-for (int j = i + 1; j < MAX_OBJECTS; j++){
-  if (gAABBArray[j]->min[gSortAxis] > gAABBArray[i]->max[gSortAxis])
-  break;
-  if (AABBOverlap(gAABBArray[i], gAABBArray[j]))
-  TestCollision(gAABBArray[i], gAABBArray[j]);
-  }
-}
-
-for (int c = 0; c < 3; c++)
-v[c] = s2[c] - s[c] * s[c] / MAX_OBJECTS;
-gSortAxis = 0;
-if (v[1] > v[0])
-gSortAxis = 1;
-if (v[2] > v[gSortAxis])
-gSortAxis = 2;
-}
-\end{lstlisting}
-
-A Figura~\ref{fig:figura3} ilustra um grupo de objetos antes de passar pela fase ampla, e os objetos após a passagem pela fase ampla.
-\begin{figure}[htb]
-  \centering
-	\caption{\label{fig:figura3} Ilustração de objetos antes e depois de passarem pela fase ampla}
-	\includegraphics[scale=0.4]{Imagens/Figura_2.4.png} %width=\textwidth
-	\legend{Fonte: \citeonline{ericson2004real}. }
-\end{figure}
-
-\begin{framed}
-\footnotesize
-\noindent Descrição da Imagem: A Figura~\ref{fig:figura3} apresenta o resultado do processamento na fase ampla. A imagem tem duas partes: a esquerda, que  mostra os objetos antes do processamento da fase ampla; a direita, que mostra os agrupamentos feitos pelo processamento da fase ampla. Antes do processamento, a imagem mostra 11 objetos retangulares dispostos de forma aleatória, mas que podem ser agrupados por proximidade (alguns estão mais próximos do que outros). Pode-se dizer que os objetos poderiam ser separados em 3 grupos verticais, como colunas.
-
-\noindent Na primeira coluna há 4 objetos: 3 são maiores e estão em colisão; 1 menor, está sozinho bem no meio. Na segunda coluna, também há 4 objetos: 2 na parte superior, em colisão;  2 objetos separados na parte de baixo da coluna, um mais próximo desta colisão (meio da coluna) e outro mais distante (bem na parte inferior da coluna). Na terceira coluna há 3 objetos: 1 está sozinho (na parte superior), 2 estão em colisão (parte inferior da coluna).
-
-\noindent Na parte direita da imagem estão os mesmos blocos, na mesma organização, mas agora agrupados em função do processamento da fase ampla. Os agrupamentos são representados por uma área sombreada em cinza em torno dos objetos. Os 11 objetos foram agrupados em 5 subgrupos menores. Destes, 3 subgrupos possuem objetos que colidem e 2 possuem objetos isolados. A separação ficou da seguinte forma:
-
-\noindent A primeira coluna tornou-se um subgrupo completo com os mesmos 4 objetos. A segunda coluna ficou com um subgrupo com os 3 objetos superiores (2 em colisão e 1 bem próximo). O objeto mais distante (bem na parte inferior da coluna) ficou sozinho em um subgrupo. A terceira ficou com 2 subgrupos: O objeto que estava na parte superior ficou em um subgrupo, também sozinho. Já os objetos da parte inferior formaram um subgrupo com os dois objetos de baixo.
-
-\noindent Após a fase ampla estes 11 objetos foram separados em 5 subgrupos. Destes 5 subgrupos, 3 possuem objetos que colidem e 2 possuem objetos isolados (sozinhos)
-\end{framed}
-
-\subsection{Algoritmos de Fase Estreita}
-
-Após  os testes da fase ampla retornarem pares de objetos que possivelmente
-estejam colidindo, é a vez da fase estreita ser executada.
-
-Nesta fase, os algoritmos mais custosos e complexos computacionalmente são
-executados para determinar com certeza se os objetos estão em colisão.
-Caso estejam, pode-se coletar as informações sobre a colisão como normal, ponto
-de contato e profundidade de penetração para resolver a colisão mais tarde.
 
 \subsubsection{Esfera contra Esfera}
 
@@ -499,7 +320,187 @@ return false;
 
 Implementações mais sofisticadas podem ser encontradas em \citeonline{ericson2004real}.
 
-\subsubsection{Informações sobre a Colisão}
+	\subsection{Fases da Detecção de Colisão}
+A detecção de colisão é dividida em duas áreas principais que são fase ampla e fase estreita.
+
+A fase ampla, segundo \citeonline{ericson2004real}, é responsável por determinar rapidamente pares de objetos que possivelmente estejam colidindo, descartando aqueles objetos que não estão.
+Nesta fase, os delimitadores AABBS das formas geométricas são testados pois possuem algoritmos simplificados e eficientes para esta tarefa.
+Quando uma colisão entre dois AABBS é detectada, a sua geometria contida pode não estar colidindo com a geometria do segundo AABB. Então estes dois objetos são agrupados para uma análise mais detalhada em uma fase posterior.
+
+Já a fase estreita, também segundo \citeonline{ericson2004real},  é responsável pelo trabalho mais detalhado e preciso da detecção de colisão.
+É nesta fase onde os algoritmos e técnicas específicas são aplicadas para determinar se de fato os pares de objetos indicados pela fase anterior estão colidindo.
+Caso estejam colidindo, informações como vetor normal, ponto de contato e profundidade de penetração devem ser calculados para uso posterior.
+O uso do ponto de contato é discutido em \citeonline{baraff1992dynamic}, enquanto a normal e profundidade de penetração são explicados em \citeonline{bourg2013physics}.
+\subsubsection{Algoritmos para Fase Ampla}
+Em um ambiente simulado podem existir muitos objetos, alguns próximos outros distantes. 
+Ao selecionar um objeto qualquer deste conjunto de objetos queremos saber com quais outros objetos existe a chance de colisão. 
+Em uma situação desta natureza, a complexidade dos testes normalmente é de O(n² ), onde n é o número de objetos a serem
+testados. Apesar de ser um problema polinomial, esta complexidade ainda é muito dispendiosa, porque os objetos mais distantes espacialmente não precisariam ser testados.
+
+Para acelerar este processo, segundo \citeonline{ericson2004real}, existem diversas estruturas de dados e técnicas de compartimentação espacial. 
+A lógica destas técnicas é agrupar os objetos que estão próximos uns dos outros e interromper a busca quando o restante dos objetos estão fora de alcance.
+
+Algumas das estruturas mais populares atualmente são as árvores octrees, grades uniformes e a divisão espacial por hash.
+
+\subsubsubsection{Octrees}
+
+Uma octree é uma estrutura de dados hierárquica que organiza um espaço
+tridimensional em células menores recursivamente.
+Dado um nó raiz, este nó é dividido em 8  filhos, que também podem ser
+subdivididos em mais 8 filhos até que um critério de parada seja satisfeito.
+Este critério pode ser uma profundidade máxima para a árvore, ou o tamanho do
+nó que será dividido atingiu um limite mínimo.
+
+Os objetos indexados pela estrutura serão adicionados no menor nó que seja capaz de conter todo o volume do objeto.
+Com esta compartimentação espacial, os objetos só precisam verificar a possibilidade de colisão com seus irmãos, e com os nós mais profundos acelerando assim o processo. A Figura~\ref{fig:figura1} mostra a representação de uma árvore octree e seus filhos.
+\begin{figure}[htb]
+  \centering
+	\caption{\label{fig:figura1} Figura mostrando a representação de uma octree}
+	\includegraphics[scale=0.5]{Imagens/Figura_7.10.png} %width=\textwidth
+	\legend{Fonte: \cite{ericson2004real}. }
+\end{figure}
+
+\begin{framed}
+\footnotesize
+\noindent Descrição da Imagem: A Figura~\ref{fig:figura1} representa um cubo, tridimensional, em perspectiva (de forma que vemos três faces e um canto). Este cubo (que representa um nó na estrutura octree) é dividido em 8 subcubos - com $1/8$ vezes o tamanho do cubo maior. Em outras palavras, o cubo é dividido na metade nos eixos x,y e z.
+
+\noindent Na imagem vemos 7 subcubos numerados de 0 até 8. Na parte inferior estão os cubos 0 (que não é visível por estar escondido atrás dos outros nessa perspectiva); Da direita para esquerda estão os cubos 1,5 e 4. Na parte superior estão os cubos 3,7,6 e 2. O cubo 2 está sobre o cubo 0; o cubo 3 está sobre o cubo 1; o cubo 7 está sobre o cubo 7 e, por fim, o cubo 6 está sobre o cubo 4.
+\end{framed}
+
+A Figura~\ref{fig:figura2} mostra uma árvore quadtree, que é a versão bidimensional de uma árvore octree. Nesta figura é ilustrado como os objetos adicionados ficam indexados nos nós.
+
+\begin{figure}[htb]
+  \centering
+	\caption{\label{fig:figura2} Figura ilustrando uma árvore octree acomodando objetos}
+	\includegraphics[scale=0.5]{Imagens/Figura_7.11.png} %width=\textwidth
+	\legend{Fonte: \cite{ericson2004real}. }
+\end{figure}
+
+\begin{framed}
+\footnotesize
+
+\noindent Descrição da Imagem: A Figura~\ref{fig:figura2}: mostra um quadrado subdividido em quadrados menores, com 15 bolinhas distribuídas aleatoriamente, que representam objetos da simulação. Nenhuma bolinha toca outra, portanto não existe colisão entre os objetos da simulação. O quadrado maior (1º nível na quadtree) é então dividido ao meio (verticalmente e horizontalmente), formando 4 subquadrados menores (2º nível na quadtree). Na imagem, esta divisão é representada por linhas pontilhadas. A seguir, uma nova divisão ocorre e cada subquadrado é dividido novamente (verticalmente e horizontalmente) em 4 novos subquadrados (3º nível na quadtree). Na imagem, esta divisão é representada por linhas tracejadas. 
+
+\noindent Ao final das divisões, cada quadrado foi dividido em 4 subquadrados. As bolinhas dentro do quadrado inicial são agora classificados em função de sua posição estão nestas divisões dos quadrados. Se alguma bolinha foi “cortada” por uma das linhas divisórias, então pertencem ao nível superior, caso contrário pertencem ao nível inferior.
+
+\noindent A primeira divisão (linha pontilhada) “corta” 3 bolinhas (cor cinza escuro). Estas bolinhas pertencem ao quadrado maior (1º nível); As linhas tracejadas “cortam” 5 bolinhas (cor cinza claro). Estas bolinhas pertencem aos quadrados da primeira divisão (2º nível); As bolinhas que não estão sendo cortadas por nenhuma linha (cor branco), ficaram exatamente dentro dos quadrados menores (3º nível).
+\end{framed}
+
+
+\subsubsubsection{Classificar e Varrer}
+
+Na detecção de colisão, existe uma categoria de algoritmos denominada de
+classificação e varredura. Estes algoritmos tem como objetivo determinar grupos
+de objetos que estão colidindo uns com os outros. Esta categoria de algoritmos é dividida em duas etapas principais:
+
+Classificação: Classifica os objetos seguindo um critério específico. Este
+critério pode ser ordenar os objetos ao longo de um determinado eixo.
+
+Varredura: Varre os objetos classificados detectando interseções entre os os
+objetos que estão na projeção do intervalo especificado.
+
+Segundo \citeonline{ericson2004real} o algoritmo começa ordenando o vetor de entrada por um dos eixos X, Y ou Z., em
+seguida, o vetor é percorrido, e em cada iteração os objetos são testados
+quanto a colisão. Caso o limite inferior do Código~\ref{code:aabb_1} seja maior do
+que o limite superior do AABB testado, o laço interno pode parar com segurança
+pois não existe mais risco de colisão com os próximos objetos. Em seguida, a
+variância dos eixos são calculados, e o eixo com a maior variância é
+selecionado para uma execução futura.
+
+\begin{lstlisting}[frame=single,caption=Exemplo de ordenar e varrer\label{code:SortAndSweep}]
+void SortAndSweepAABBArray(){
+qsort(gAABBArray, MAX_OBJECTS, sizeof(AABB *), cmpAABBs);
+float s[3]={0.0f, 0.0f, 0.0f}, s2[3]={0.0f, 0.0f, 0.0f},v[3];
+
+for (int i = 0; i < MAX_OBJECTS; i++){
+  Point p = 0.5f * (gAABBArray[i]->min + gAABBArray[i]->max);
+  for (int c = 0; c < 3; c++){
+    s[c] += p[c];
+    s2[c] += p[c] * p[c];
+  }
+
+for (int j = i + 1; j < MAX_OBJECTS; j++){
+  if (gAABBArray[j]->min[gSortAxis] > gAABBArray[i]->max[gSortAxis])
+  break;
+  if (AABBOverlap(gAABBArray[i], gAABBArray[j]))
+  TestCollision(gAABBArray[i], gAABBArray[j]);
+  }
+}
+
+for (int c = 0; c < 3; c++)
+v[c] = s2[c] - s[c] * s[c] / MAX_OBJECTS;
+gSortAxis = 0;
+if (v[1] > v[0])
+gSortAxis = 1;
+if (v[2] > v[gSortAxis])
+gSortAxis = 2;
+}
+\end{lstlisting}
+
+A Figura~\ref{fig:figura3} ilustra um grupo de objetos antes de passar pela fase ampla, e os objetos após a passagem pela fase ampla.
+\begin{figure}[htb]
+  \centering
+	\caption{\label{fig:figura3} Ilustração de objetos antes e depois de passarem pela fase ampla}
+	\includegraphics[scale=0.4]{Imagens/Figura_2.4.png} %width=\textwidth
+	\legend{Fonte: \citeonline{ericson2004real}. }
+\end{figure}
+
+\begin{framed}
+\footnotesize
+\noindent Descrição da Imagem: A Figura~\ref{fig:figura3} apresenta o resultado do processamento na fase ampla. A imagem tem duas partes: a esquerda, que  mostra os objetos antes do processamento da fase ampla; a direita, que mostra os agrupamentos feitos pelo processamento da fase ampla. Antes do processamento, a imagem mostra 11 objetos retangulares dispostos de forma aleatória, mas que podem ser agrupados por proximidade (alguns estão mais próximos do que outros). Pode-se dizer que os objetos poderiam ser separados em 3 grupos verticais, como colunas.
+
+\noindent Na primeira coluna há 4 objetos: 3 são maiores e estão em colisão; 1 menor, está sozinho bem no meio. Na segunda coluna, também há 4 objetos: 2 na parte superior, em colisão;  2 objetos separados na parte de baixo da coluna, um mais próximo desta colisão (meio da coluna) e outro mais distante (bem na parte inferior da coluna). Na terceira coluna há 3 objetos: 1 está sozinho (na parte superior), 2 estão em colisão (parte inferior da coluna).
+
+\noindent Na parte direita da imagem estão os mesmos blocos, na mesma organização, mas agora agrupados em função do processamento da fase ampla. Os agrupamentos são representados por uma área sombreada em cinza em torno dos objetos. Os 11 objetos foram agrupados em 5 subgrupos menores. Destes, 3 subgrupos possuem objetos que colidem e 2 possuem objetos isolados. A separação ficou da seguinte forma:
+
+\noindent A primeira coluna tornou-se um subgrupo completo com os mesmos 4 objetos. A segunda coluna ficou com um subgrupo com os 3 objetos superiores (2 em colisão e 1 bem próximo). O objeto mais distante (bem na parte inferior da coluna) ficou sozinho em um subgrupo. A terceira ficou com 2 subgrupos: O objeto que estava na parte superior ficou em um subgrupo, também sozinho. Já os objetos da parte inferior formaram um subgrupo com os dois objetos de baixo.
+
+\noindent Após a fase ampla estes 11 objetos foram separados em 5 subgrupos. Destes 5 subgrupos, 3 possuem objetos que colidem e 2 possuem objetos isolados (sozinhos)
+\end{framed}
+
+\subsubsection{Algoritmos de Fase Estreita}
+
+Após  os testes da fase ampla retornarem pares de objetos que possivelmente
+estejam colidindo, é a vez da fase estreita ser executada.
+
+Nesta fase, os algoritmos mais custosos e complexos computacionalmente são
+executados para determinar com certeza se os objetos estão em colisão.
+Caso estejam, pode-se coletar as informações sobre a colisão como normal, ponto
+de contato e profundidade de penetração para resolver a colisão mais tarde.
+
+
+\subsection{Simulação de Corpos Rígidos}
+Segundo \citeonline{bourg2013physics} Um corpo rígido é um conjunto de partículas  que permanecem a distâncias fixas umas das outras  sem nenhum tipo de translação ou rotação entre elas. Em outras palavras,  um corpo rígido não mudará de forma enquanto se move, ou sua deformação é tão insignificante que pode ser desprezada.
+
+Um corpo rígido é  frequentemente representado como tendo uma posição, uma orientação  e  dimensões para representar seu volume. Estes são requisitos mínimos para a  sua definição, porém, dependendo do nível de precisão desejada, pode-se adicionar mais atributos como tensores de inércia, velocidades lineares e angulares, coeficiente de restituição, e o que mais for necessário para que se atinja os objetivos desejados.
+
+Existem 3 classes principais de corpos que podem ser representadas em uma simulação:
+Corpos rígidos, que não se deformam  enquanto se movem, ou caso se deformem, são capazes de voltar a sua forma original;
+
+
+Corpos macios, que podem deformar enquanto se movem ou por ação de forças ou eventos externos;
+
+Ou corpos estáticos, que nada mais é que uma sub-classificação de um corpo rígido ou um corpo macio,  mas com a ausência de massa, ficando a sim, estacionário na posição em que se
+encontra.
+
+\subsubsection{Representação de um Corpo Rígido}
+
+Para fins de exemplos, neste trabalho será adotada representação de corpo rígido do Código~\ref{code:RigidBody}.
+
+\begin{lstlisting}[frame=single,caption=Exemplo de corpo rígido\label{code:RigidBody}]
+class RigidBody{
+public:
+  float mass;
+  float restitution;
+  vector3d lastPosition;
+  vector3d position;
+  vector3d velocity;
+  vector3d forces;
+  AABB* aabb;
+};
+\end{lstlisting}
+
+\subsubsection{Movimentação}
 
 Se o objetivo for determinar  se os objetos colidem, os testes demonstrados são
 suficientes. No entanto, se o objetivo for resolver a colisão informações adicionais devem
@@ -520,7 +521,7 @@ por exemplo, se uma esfera colidir contra uma caixa, e seu centro estiver
 dentro da caixa, o vetor normal será um vetor nulo, o que poderá resultar em
 comportamentos indesejados na hora de resolver a colisão.
 
-\subsection{Resolução de Colisão}
+\subsubsection{Simulação da Física}
 
 Após detectar uma colisão entre dois objetos torna-se necessário resolver
 a mesma. Em simulações que não requerem um realismo muito grande, apenas a
@@ -567,7 +568,7 @@ Segundo \citeonline{bourg2013physics} este é apenas um exemplo básico e simpli
 A  proposta de desenvolvimento deste projeto é um programa gráfico que
 executará simulações de movimento em ambientes 3d, para analisar os mecanismos de detecção de colisão.
 
-\subsection{Recursos preliminares do Simulador}
+\subsection{Recursos do Simulador}
 O simulador desenvolvido deverá implementar algumas leis básicas da física, para que os objetos simulados reajam de forma mais realista, tornando assim, a simulação mais dinâmica. O programa será organizado em 3 partes principais:
 
 Tela principal: Será onde a simulação será desenhada, mostrando ao usuário o andamento da simulação. A tela principal também terá um menu permitindo o controle de diversos aspectos da simulação. 
@@ -596,7 +597,7 @@ Os objetos simulados poderão, por meio de um painel, ter os seguintes parâmetr
 \item Forma: Entre esfera; caixa ou cubo; 
 \end{itemize}
 
-\subsection{Modelagem preliminar do simulador}
+\subsection{Estrutura do Simulador}
 Nesta sessão é apresentado a modelagem preliminar da engine de simulação. Os principais componentes são comentados. 
 
 A classe descrita em Código~\ref{ps:vec3d} representará as coordenadas cartesianas tridimensionais no espaço.
@@ -806,11 +807,10 @@ A listagem a seguir apresenta os recursos previstos para o desenvolvimento do pr
 \begin{itemize}
 \item Compilador compatível: com c++20 ou superior;
 \item Compilador compatível: com C2017 ou posterior;
-\item Framework wxwidgets: para a criação das telas e controles como listas, botões e demais controles;
-\item Biblioteca opengl: para a renderização gráfica;
-\item Biblioteca wxglade: para construir a interface gráfica do usuário (GUI);
-\item Biblioteca fmod: para indicações sonoras;
-\item Biblioteca bass: para indicações sonoras;
+\item Biblioteca wxwidgets 3.0 ou superior
+\item Biblioteca opengl 4.0 ou superior
+\item Programa wxglade: para construir a interface gráfica do usuário (GUI);
+\item Biblioteca bass 2.4 ou superior: para indicações sonoras;
 \end{itemize}
 
 \subsection{Cronograma}
