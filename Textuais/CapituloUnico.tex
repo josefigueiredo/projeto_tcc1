@@ -3,7 +3,7 @@
 
 \section{Tema}
 
-Simulação Computacional de corpos rígidos.
+Simulação c	omputacional de corpos rígidos.
 
 \subsection{Delimitação do tema}
 
@@ -16,7 +16,7 @@ Detecção de colisão entre objetos em simulações computacionais de corpos r�
 
 \section{Objetivos}
 \subsection{Objetivo Geral}
-Explicar como funciona a detecção de colisão em simulações computacionais de corpos rígidos.
+Desenvolver um programa gráfico de simulação de movimento em ambientes 3d, para estudo e análise dos mecanismos para detecção de colisão entre corpos rígidos.
 
 \subsection{Objetivos Específicos}
 \begin{enumerate}
@@ -32,7 +32,7 @@ Segundo \citeonline{bourg2013physics}, “a detecção de colisão é um problem
 
 \citeonline{ericson2004real} afirma que apesar de hoje em dia os computadores serem extremamente rápidos, a detecção de colisão continua sendo um problema fundamental. Isso ocorre porque jogos e outras simulações são frequentemente construídos em um ambiente 3D, com centenas de milhares de polígonos, exigindo assim, algoritmos e estruturas de dados mais sofisticados para operar, em tempo real, com conjuntos de dados dessa magnitude.
 
-Por ser uma área ainda em expansão, pouco explorada e conhecida, este estudo se justifica pois novos métodos poderão surgir, havendo possibilidades para vários trabalhos de pesquisa e desenvolvimento.
+Por ser uma área ainda em expansão, pouco explorada e conhecida, este estudo se justifica pois novos métodos poderão surgir, havendo possibilidades para vários trabalhos de pesquisa e desenvolvimento. Também, as bibliotecas gráficas hoje existentes ainda não implementam de forma nativa simulações de corpos rígidos.
 
 \section{Referencial Teórico}
 
@@ -228,7 +228,7 @@ public:
 
 Neste trabalho optou-se pela utilização da estrutura AABB, devido à relativa facilidade de implementação em relação a estrutura OBB
 
-\subsection{Detecção de Colisão}
+\subsubsection{Detecção de Colisão}
 Segundo \citeonline{bourg2013physics}, a detecção de colisão é um problema de geometria computacional que
 determina se e onde, dois ou mais objetos colidiram.
 Uma colisão pode ser detectada de diversas maneiras dependendo da natureza dos
@@ -241,7 +241,7 @@ Após uma colisão ser detectada, diversos dados precisam ser coletados para o p
 
 Outros dados relevantes para coleta na detecção de colisão são: o vetor normal, que é um vetor unitário que indica a direção em que a colisão aconteceu; e  a profundidade de sobreposição ou de penetração dos objetos, que estabelece o limite para que os objetos se toquem e não se sobreponham.
 
-\subsubsection{Esfera contra Esfera}
+\subsubsubsection{Esfera contra Esfera}
 
 Para que duas esferas estejam em colisão, a soma de seus raios deve ser menor
 ou igual a distância de seus centros segundo \citeonline{ericson2004real}.
@@ -266,7 +266,7 @@ teste contra a distância também ao quadrado entre os centros das esferas.
 Esta é uma prática recomendada pois o cálculo de raiz quadrada pode ser muito
 lento para ser realizada como descrito em \citeonline{ericson2004real} e \citeonline{bourg2013physics}.
 
-\subsubsection{Caixa contra Caixa}
+\subsubsubsection{Caixa contra Caixa}
 
 Para que duas caixas estejam em colisão, precisa existir sobreposição nos três
 eixos testados.
@@ -289,7 +289,7 @@ return true;
 Existem outras variações para este mesmo algoritmo descritos com mais detalhes
 em \citeonline{ericson2004real}.
 
-\subsubsection{Esfera contra Caixa}
+\subsubsubsection{Esfera contra Caixa}
 
 O teste de esfera e caixa pode ser realizado em duas etapas principais:
 Primeiro: encontrar o ponto mais próximo da caixa em relação a esfera.
@@ -576,7 +576,8 @@ Tela principal: Será onde a simulação será desenhada, mostrando ao usuário 
 Configuração do ambiente: Esta tela será responsável por configurar o ambiente de simulação. Propriedades como limites do ambiente, passo de tempo, e se a gravidade deve ou não ser aplicada são exemplos de propriedades configuráveis. Também nesta tela, terá a lista de objetos que poderão ser controlados.
 Engine de simulação: Esta parte do programa será subdividida em simulação do movimento e detecção de colisão. 
 
-Simulação do movimento: Esta etapa é responsável pelos cálculos que modelam o movimento dos objetos presentes no ambiente da simulação, utilizando para isto as leis de Newton. No entanto, a única restrição existente é que os objetos estáticos, que representam obstáculos ou a geografia do espaço, não devem ser movimentados.
+Simulação do movimento: Esta etapa é responsável pelos cálculos para modelar o movimento dos objetos. presentes na cena.
+O movimento dos objetos, seguirá as leis de Newton, e  deverá reagir de acordo com as forças aplicadas sobre ele.
 
 Detecção de colisão: A detecção de colisão é a etapa responsável por aplicar algoritmos específicos nos objetos a fim de determinar se existe uma sobreposição, ou se a distância entre 2 objetos é inferior a uma determinada tolerância. Esta etapa também é responsável por resolver a colisão caso exista. 
 
@@ -799,9 +800,9 @@ class Ambiente_de_simulacao estende AABB{
 };
 \end{lstlisting}
 
-\subsection{Fluxograma}
+\subsection{Fluxo Geral do Programa}
 \begin{itemize}
-\item Fase 1
+\item Inicialização do programa
 \begin{itemize}
 \item Iniciar bibliotecas
 \item Criar janela de visualização
@@ -809,16 +810,14 @@ class Ambiente_de_simulacao estende AABB{
 \item Definir cena atual
 \item Ouvir eventos
 \end{itemize}
-\item Fase 2:
+\item Criação da Cena
 \begin{itemize}
-\item Criar cena
 \item Configurar tamanho do ambiente
 \item Definir gravidade
 \item Definir passo de tempo
 \item Definir duração máxima da simulação em segundos
 \begin{itemize}
-\item Fase 2.1
-Adicionar objeto
+\item Adicionar objeto
 \item Definir massa
 \item Definir restituição
 \item Definir posição
@@ -826,15 +825,13 @@ Adicionar objeto
 \item Definir velocidade
 \end{itemize}
 \begin{itemize}
-\item Fase 2.2
 \item Adicionar objeto na cena
 \item Massa = 0 Adicionar na octree
 \item Massa > 0 Adicionar em objetos dinâmicos
 \end{itemize}
 \end{itemize}
-\item Fase 3:
-\begin{itemize}
 \item Iniciar simulação
+\begin{itemize}
 \item Enquanto tempo atual < duração da simulação
 \item Mover objetos dinâmicos com base nas leis de Newton
 \item Verificar possíveis colisões entre objetos dinâmicos
@@ -843,9 +840,8 @@ Adicionar objeto
 \item Resolver colisões
 \item Atualizar gráficos
 \end{itemize}
-\item Fase 4:
-\begin{itemize}
 \item Fim da simulação
+\begin{itemize}
 \item Listar objetos
 \item Examinar objetos
 \end{itemize}
