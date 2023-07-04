@@ -3,7 +3,7 @@
 
 \section{Tema}
 
-Simulação c	omputacional de corpos rígidos.
+Simulação computacional de corpos rígidos.
 
 \subsection{Delimitação do tema}
 
@@ -190,6 +190,14 @@ sofisticados para operarem sobre nuvens de pontos para detectar colisões.
 Em \citeonline{ericson2004real} é discutido com mais detalhes poliedros e seus algoritmos específicos.
 
 \subsection{Colisão}
+
+Uma colisão é um evento que acontece quando dois ou mais objetos entram em
+contato ocupando assim, o mesmo espaço \citeonline{ericson2004real}.
+Estes objetos podem ser personagens de um jogo, elementos do ambiente, ou até
+mesmo raios disparados em uma direção específica para determinar todos os
+objetos na proximidade. A colisão também envolve cálculos para determinar a
+consequência desse contato como explicado em \citeonline{bourg2013physics}.
+
 \subsubsection{Estruturas para delimitação de volumes}
 
 Em uma simulação computacional existem diversos objetos e o ambiente precisa testar se alguma colisão ocorreu. Este monitoramento constante acaba tendo um alto custo computacional. Para otimizar esse processo, os simuladores utilizam estruturas chamadas delimitadores de volume, que fazem um encapsulamento da geometria em avaliação.
@@ -240,85 +248,6 @@ determinada tolerância. Em outros casos, os objetos podem estar se sobrepondo e
 Após uma colisão ser detectada, diversos dados precisam ser coletados para o processamento e resolução da colisão, que é feito posteriormente. Os dados coletados dependerão da natureza do simulador. Para um simulador de física, por exemplo, pode ser necessário o ponto ou pontos de contato onde os objetos colidiram, bem como a velocidade relativa destes objetos no instante da colisão.
 
 Outros dados relevantes para coleta na detecção de colisão são: o vetor normal, que é um vetor unitário que indica a direção em que a colisão aconteceu; e  a profundidade de sobreposição ou de penetração dos objetos, que estabelece o limite para que os objetos se toquem e não se sobreponham.
-
-\subsubsubsection{Esfera contra Esfera}
-
-Para que duas esferas estejam em colisão, a soma de seus raios deve ser menor
-ou igual a distância de seus centros segundo \citeonline{ericson2004real}.
-A representação da esfera descrita no Código~\ref{code:sphere3d} será utilizada.
-
-\begin{lstlisting}[frame=single,caption=Colisão entre esferas\label{code:collisionSphereSphere}]
-bool sphereSphere(sphere3d* s1, sphere3d* s2){
-vector3d v=s1->center-s2->center;
-float dist=((v.x*v.x)+(v.y*v.y)+(v.z*v.z));
-float sqRadius=s1->radius+s2->radius;
-sqRadius=sqRadius*sqRadius;
-
-if(dist<=sqRadius){
-  return true;
-  }
-return false;
-}
-\end{lstlisting}
-
-Neste exemplo, a soma dos raios foram elevados ao quadrado para realizar o
-teste contra a distância também ao quadrado entre os centros das esferas.
-Esta é uma prática recomendada pois o cálculo de raiz quadrada pode ser muito
-lento para ser realizada como descrito em \citeonline{ericson2004real} e \citeonline{bourg2013physics}.
-
-\subsubsubsection{Caixa contra Caixa}
-
-Para que duas caixas estejam em colisão, precisa existir sobreposição nos três
-eixos testados.
-Neste exemplo, a definição de caixa pela classe CaixaMinMax, do Código~\ref{code:box3d} será preferida.
-
-\begin{lstlisting}[frame=single,caption=Colisão entre caixas\label{code:collisionBoxBox}]
-bool boxBox(box3d* b1, box3d* b2){
-if((b1->min.x>b2->max.x)||(b2->min.x>b1->max.x))
-  return false;
-
-if((b1->min.y>b2->max.y)||(b2->min.y>b1->max.y))
-  return false;
-
-if((b1->min.z>b2->max.z)||(b2->min.z>b1->max.z))
-  return false;
-return true;
-}
-\end{lstlisting}
-
-Existem outras variações para este mesmo algoritmo descritos com mais detalhes
-em \citeonline{ericson2004real}.
-
-\subsubsubsection{Esfera contra Caixa}
-
-O teste de esfera e caixa pode ser realizado em duas etapas principais:
-Primeiro: encontrar o ponto mais próximo da caixa em relação a esfera.
-Segundo: Calcular a distância entre o ponto mais próximo e o centro da esfera.
-Caso a distância seja menor que o raio da esfera, então existe uma colisão.
-
-\begin{lstlisting}[frame=single,caption=Colisão entre esfera e caixa\label{code:collisionSphereBox}]
-bool spherebox(sphere3d *s, box3d *b){
-vector3d closestPoint;
-for (int i = 0; i < 3; i++){
-  float v = s->center[i];
-  if (v < b->min[i])
-  v = b->min[i];  
-  if (v > b->max[i])
-    v = b->max[i];
-  closestPoint[i] = v;
-  }
-  
-float sqdist=((closestPoint - s->center) * (closestPoint - s->center));
-float sqradius = (s->radius * s->radius);
-
-if(sqdist <= sqradius){
-  return true;
-  }
-return false;
-}
-\end{lstlisting}
-
-Implementações mais sofisticadas podem ser encontradas em \citeonline{ericson2004real}.
 
 	\subsection{Fases da Detecção de Colisão}
 A detecção de colisão é dividida em duas áreas principais que são fase ampla e fase estreita.
@@ -468,6 +397,84 @@ executados para determinar com certeza se os objetos estão em colisão.
 Caso estejam, pode-se coletar as informações sobre a colisão como normal, ponto
 de contato e profundidade de penetração para resolver a colisão mais tarde.
 
+\subsubsubsection{Esfera contra Esfera}
+
+Para que duas esferas estejam em colisão, a soma de seus raios deve ser menor
+ou igual a distância de seus centros segundo \citeonline{ericson2004real}.
+A representação da esfera descrita no Código~\ref{code:sphere3d} será utilizada.
+
+\begin{lstlisting}[frame=single,caption=Colisão entre esferas\label{code:collisionSphereSphere}]
+bool sphereSphere(sphere3d* s1, sphere3d* s2){
+vector3d v=s1->center-s2->center;
+float dist=((v.x*v.x)+(v.y*v.y)+(v.z*v.z));
+float sqRadius=s1->radius+s2->radius;
+sqRadius=sqRadius*sqRadius;
+
+if(dist<=sqRadius){
+  return true;
+  }
+return false;
+}
+\end{lstlisting}
+
+Neste exemplo, a soma dos raios foram elevados ao quadrado para realizar o
+teste contra a distância também ao quadrado entre os centros das esferas.
+Esta é uma prática recomendada pois o cálculo de raiz quadrada pode ser muito
+lento para ser realizada como descrito em \citeonline{ericson2004real} e \citeonline{bourg2013physics}.
+
+\subsubsubsection{Caixa contra Caixa}
+
+Para que duas caixas estejam em colisão, precisa existir sobreposição nos três
+eixos testados.
+Neste exemplo, a definição de caixa pela classe CaixaMinMax, do Código~\ref{code:box3d} será preferida.
+
+\begin{lstlisting}[frame=single,caption=Colisão entre caixas\label{code:collisionBoxBox}]
+bool boxBox(box3d* b1, box3d* b2){
+if((b1->min.x>b2->max.x)||(b2->min.x>b1->max.x))
+  return false;
+
+if((b1->min.y>b2->max.y)||(b2->min.y>b1->max.y))
+  return false;
+
+if((b1->min.z>b2->max.z)||(b2->min.z>b1->max.z))
+  return false;
+return true;
+}
+\end{lstlisting}
+
+Existem outras variações para este mesmo algoritmo descritos com mais detalhes
+em \citeonline{ericson2004real}.
+
+\subsubsubsection{Esfera contra Caixa}
+
+O teste de esfera e caixa pode ser realizado em duas etapas principais:
+Primeiro: encontrar o ponto mais próximo da caixa em relação a esfera.
+Segundo: Calcular a distância entre o ponto mais próximo e o centro da esfera.
+Caso a distância seja menor que o raio da esfera, então existe uma colisão.
+
+\begin{lstlisting}[frame=single,caption=Colisão entre esfera e caixa\label{code:collisionSphereBox}]
+bool spherebox(sphere3d *s, box3d *b){
+vector3d closestPoint;
+for (int i = 0; i < 3; i++){
+  float v = s->center[i];
+  if (v < b->min[i])
+  v = b->min[i];  
+  if (v > b->max[i])
+    v = b->max[i];
+  closestPoint[i] = v;
+  }
+  
+float sqdist=((closestPoint - s->center) * (closestPoint - s->center));
+float sqradius = (s->radius * s->radius);
+
+if(sqdist <= sqradius){
+  return true;
+  }
+return false;
+}
+\end{lstlisting}
+
+Implementações mais sofisticadas podem ser encontradas em \citeonline{ericson2004real}.
 
 \subsection{Simulação de Corpos Rígidos}
 Segundo \citeonline{bourg2013physics} Um corpo rígido é um conjunto de partículas  que permanecem a distâncias fixas umas das outras  sem nenhum tipo de translação ou rotação entre elas. Em outras palavras,  um corpo rígido não mudará de forma enquanto se move, ou sua deformação é tão insignificante que pode ser desprezada.
